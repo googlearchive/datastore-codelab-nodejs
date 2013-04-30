@@ -100,16 +100,6 @@ var commands = {
       console.log('%d: DEL', todoId);
     });
   },
-  do: function(todoId) {
-    commands.get(todoId, function(err, id, text, done) {
-      commands.edit(id, text, 'true');
-    });
-  },
-  undo: function(todoId) {
-    commands.get(todoId, function(err, id, text, done) {
-      commands.edit(id, text, 'false');
-    });
-  },
   edit: function(id, text, done) {
     done = done === 'true';
     datastore.blindwrite({
