@@ -2,7 +2,7 @@
 
 var googleapis = require('googleapis'),
     authclient = new googleapis.OAuth2Client(),
-    datasetId = 'atlas-e2e-prod',
+    datasetId = 'gcd-codelab',
     compute = new googleapis.auth.Compute(),
     datastore = null,
     todoListName = null;
