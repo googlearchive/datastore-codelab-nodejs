@@ -21,6 +21,7 @@ googleapis.discover('datastore', 'v1beta1', {
 });
 
 var commands = {
+  // level 0
   add: function(todoText) {
     datastore.blindwrite({
       datasetId: datasetId,
@@ -79,6 +80,7 @@ var commands = {
       }
     });
   },
+  // level 1
   del: function(todoId) {
     datastore.blindwrite({
       datasetId: datasetId,
@@ -98,6 +100,7 @@ var commands = {
       console.log('%d: DEL', todoId);
     });
   },
+  // level 2
   edit: function(id, text, done) {
     done = done === 'true';
     datastore.blindwrite({
@@ -168,6 +171,7 @@ var commands = {
 
     });
   },
+  // level 3
   archive: function() {
     datastore.runquery({
       datasetId: datasetId,
