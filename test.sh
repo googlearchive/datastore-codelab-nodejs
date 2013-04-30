@@ -19,12 +19,12 @@ OUTPUT_LS=$("${TODO}" ${TODOLIST} ls)
 echo ${OUTPUT_LS} | egrep "[0-9]+: TODO foo"
 echo ${OUTPUT_LS} | egrep "[0-9]+: TODO bar"
 echo ${OUTPUT_LS} | egrep -v "[0-9]+: TODO hop"
-OUTPUT_DO=$("${TODO}" ${TODOLIST} do ${ID0})
+OUTPUT_DO=$("${TODO}" ${TODOLIST} edit ${ID0} foo true)
 echo ${OUTPUT_DO} | egrep "[0-9]+: DONE foo"
 OUTPUT_GET=$("${TODO}" ${TODOLIST} get ${ID0})
 [[ "${OUTPUT_GET}" = "${OUTPUT_DO}" ]]
-"${TODO}" ${TODOLIST} do ${ID1}
-OUTPUT_UNDO=$("${TODO}" ${TODOLIST} undo ${ID1})
+"${TODO}" ${TODOLIST} edit ${ID1} foo true
+OUTPUT_UNDO=$("${TODO}" ${TODOLIST} edit ${ID1} bar false)
 echo ${OUTPUT_UNDO} | egrep "[0-9]+: TODO bar"
 OUTPUT_GET=$("${TODO}" ${TODOLIST} get ${ID1})
 [[ "${OUTPUT_GET}" = "${OUTPUT_UNDO}" ]]
