@@ -159,12 +159,13 @@ var commands = {
         }
       }   
     }).withAuthClient(compute).execute(function(err, result) {
-      var tt = {};
       var entityResults = result.batch.entityResults || [];
       entityResults.forEach(function(entityResult) {
-        var id = entityResult.entity.key.pathElements[1].id;
-        var title = entityResult.entity.properties.title.values[0].stringValue;
-        var done = entityResult.entity.properties.completed.values[0].booleanValue == true;
+        var entity = entityResult.entity;
+        var id = entity.key.pathElements[1].id;
+        var properties = entity.properties;
+        var title = properties.__TODO__.values[0].stringValue; // fill property name
+        var done = properties.__TODO__.values[0].booleanValue == true; // fill property name
         console.log('%d: %s %s', id, done && 'DONE' || 'TODO', title);
       });
 
