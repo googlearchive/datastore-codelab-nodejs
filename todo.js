@@ -174,59 +174,68 @@ var commands = {
   },
   // level 3
   archive: function() {
-    datastore.runquery({
-      datasetId: datasetId,
-      query: {
-        kinds: [{
-          name: 'Todo',
-        }],
-        filter: {
-          compositeFilter: {
-            operator: 'and',
-            filters: [{
-              propertyFilter: {
-                property: {
-                  name: '__key__'
-                },
-                operator: 'hasAncestor',
-                value: {
-                  keyValue: {
-                    pathElements: [{
-                      kind: 'TodoList',
-                      name: todoListName
-                    }]
+    datastore.begintransaction({
+      datasetId: datasetId
+    }).withAuthClient(compute).execute(function(err, result) {
+      var tx = result.transaction;
+      datastore.runquery({
+        datasetId: datasetId,
+        readOptions: {
+          transaction: tx
+        },
+        query: {
+          kinds: [{
+            name: 'Todo',
+          }],
+          filter: {
+            compositeFilter: {
+              operator: 'and',
+              filters: [{
+                propertyFilter: {
+                  property: {
+                    name: '__key__'
+                  },
+                  operator: 'hasAncestor',
+                  value: {
+                    keyValue: {
+                      pathElements: [{
+                        kind: 'TodoList',
+                        name: todoListName
+                      }]
+                    }
                   }
                 }
-              }
-            },{
-              propertyFilter: {
-                property: {
-                  name: 'completed'
-                },
-                operator: 'equal',
-                value: {
-                  booleanValue: true
+              },{
+                propertyFilter: {
+                  property: {
+                    name: 'completed'
+                  },
+                  operator: 'equal',
+                  value: {
+                    booleanValue: true
+                  }
                 }
-              }
-            }]
+              }]
+            }
           }
-        }
-      }   
-    }).withAuthClient(compute).execute(function(err, result) {
-      var keys = [];
-      var entityResults = result.batch.entityResults || [];
-      entityResults.forEach(function(entityResult) {
-        keys.push(entityResult.entity.key);
-      });
-      datastore.blindwrite({
-        datasetId: datasetId,
-        mutation: {
-          delete: keys
-        }      
+        }   
       }).withAuthClient(compute).execute(function(err, result) {
-        console.assert(!err, err);
-        keys.forEach(function(key) {
-          console.log('%d: DEL', key.pathElements[1].id);
+        var keys = [];
+        var entityResults = result.batch.entityResults || [];
+        entityResults.forEach(function(entityResult) {
+          keys.push(entityResult.entity.key);
+        });
+        datastore.commit({
+          datasetId: datasetId,
+          transaction: tx,
+          mutation: {
+            delete: keys
+          }      
+        }).withAuthClient(compute).execute(function(err, result) {
+          console.assert(!err, err);
+          keys.forEach(function(key) {
+            console.log('%d: DEL', key.pathElements[1].id);
+          });
         });
       });
     });

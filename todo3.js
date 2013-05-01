@@ -171,55 +171,42 @@ var commands = {
     });
   },
   archive: function() {
-    datastore.runquery({
-      datasetId: datasetId,
-      query: {
-        kinds: [{
-          name: 'Todo',
-        }],
-        filter: {
-          compositeFilter: {
-            operator: 'and',
-            filters: [{
-              propertyFilter: {
-                property: {
-                  name: '__key__'
-                },
-                operator: 'hasAncestor',
-                value: {
-                  keyValue: {
-                    pathElements: [{
-                      kind: __TODO__,  // fill ancestor kind
-                      name: __TODO__ // fill ancestor name
-                    }]
-                  }
-                }
-              }
-            },{
-              propertyFilter: {
-                property: {
-                  name: __TODO__ // fill property filter name
-                },
-                operator: 'equal',
-                value: {
-                  booleanValue: __TODO__ // fill property filter value
-                }
-              }
-            }]
-          }
-        }
-      }   
+    datastore.__TODO__({ // fill the rpc name to start a transaction
+      datasetId: datasetId
     }).withAuthClient(compute).execute(function(err, result) {
-      var keys = __TODO__; // get entity keys (hint: ls command)
-      datastore.blindwrite({
+      datastore.runquery({
         datasetId: datasetId,
-        mutation: {
-          delete: keys
-        }      
+        readOptions: {
+          transaction: __TODO__ // fill with transaction handle
+        },
+        query: {
+          kinds: [{
+            name: 'Todo',
+          }],
+          filter: {
+            compositeFilter: {
+              operator: 'and',
+              filters: [{
+                propertyFilter: __TODO__ // fill the ancestor filter
+              },{
+                propertyFilter: __TODO__ // fill the property filter
+              }]
+            }
+          }
+        }   
       }).withAuthClient(compute).execute(function(err, result) {
-        console.assert(!err, err);
-        keys.forEach(function(key) {
-          console.log('%d: DEL', key.pathElements[1].id);
+        var keys = __TODO__; // get the entity keys result
+        datastore.commit({
+          datasetId: datasetId,
+          transaction: __TODO__, // set the transaction andle
+          mutation: {
+            __TODO__: keys // set the mutation type
+          }      
+        }).withAuthClient(compute).execute(function(err, result) {
+          console.assert(!err, err);
+          keys.forEach(function(key) {
+            console.log(__TODO__); // print the delete keys
+          });
         });
       });
     });
