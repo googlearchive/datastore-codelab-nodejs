@@ -7,7 +7,7 @@ var googleapis = require('googleapis'),
     datastore = null,
     todoListName = null;
 
-var usage = 'usage todo.js <todolist> <add|get|del|ls|do|undo|archive> [todo-title|todo-id]';
+var usage = 'usage todo.js <todolist> <add|get|del|edit|ls> [todo-title|todo-id]';
 googleapis.discover('datastore', 'v1beta1', {
   localDiscoveryFilePath: './datastore_v1beta1.json',
 }).execute(function(err, client) {
