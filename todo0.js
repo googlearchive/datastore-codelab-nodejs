@@ -20,8 +20,6 @@ googleapis.discover('datastore', 'v1beta1', {
   });
 });
 
-var __TODO__ = null;
-
 var commands = {
   add: function(todoTitle) {
     datastore.blindwrite({

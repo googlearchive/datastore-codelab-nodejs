@@ -20,7 +20,7 @@ googleapis.discover('datastore', 'v1beta1', {
   });
 });
 
-var __TODO__ = null;
+var __FIXME__ = null;
 
 var commands = {
   add: function(todoTitle) {
@@ -68,9 +68,9 @@ var commands = {
     datastore.blindwrite({
       datasetId: datasetId,
       mutation: {
-        __TODO__: [{ // fill mutation name.
+        __FIXME__: [{ // fill mutation name.
           path: [{ kind: 'TodoList',  name: todoListName },
-                 { kind: 'Todo', id: __TODO__  }] // fill entity key id.
+                 { kind: 'Todo', id: __FIXME__  }] // fill entity key id.
         }]
       }   
     }).withAuthClient(compute).execute(function(err, result) {

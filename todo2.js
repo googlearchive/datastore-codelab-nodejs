@@ -20,7 +20,7 @@ googleapis.discover('datastore', 'v1beta1', {
   });
 });
 
-var __TODO__ = null;
+var __FIXME__ = null;
 
 var commands = {
   add: function(todoText) {
@@ -101,17 +101,17 @@ var commands = {
       datasetId: datasetId,
       mutation: {
          // fill mutation name
-        __TODO__: [{
+        __FIXME__: [{
           key: {
             path: [{ kind: 'TodoList', name: todoListName },
                     // fill entity key
-                   { kind: __TODO__, id: __TODO__ }]
+                   { kind: __FIXME__, id: __FIXME__ }]
           },
           properties: {
              // fill property name and value
-            __TODO__: { values: [{ stringValue: __TODO__ }] },
+            __FIXME__: { values: [{ stringValue: __FIXME__ }] },
              // fill property name and value
-            __TODO__: { values: [{ booleanValue: __TODO__ }] },
+            __FIXME__: { values: [{ booleanValue: __FIXME__ }] },
           }
         }]
       }
@@ -124,7 +124,7 @@ var commands = {
     datastore.runquery({
       datasetId: datasetId,
       query: {
-        kinds: [{ name: __TODO__ }], // fill entity kind
+        kinds: [{ name: __FIXME__ }], // fill entity kind
         filter: {
           propertyFilter: {
             property: { name: '__key__' },
@@ -143,8 +143,8 @@ var commands = {
         var entity = entityResult.entity;
         var id = entity.key.path[1].id;
         var properties = entity.properties;
-        var title = properties.__TODO__.values[0].stringValue; // fill property name
-        var completed = properties.__TODO__.values[0].booleanValue == true; // fill property name
+        var title = properties.__FIXME__.values[0].stringValue; // fill property name
+        var completed = properties.__FIXME__.values[0].booleanValue == true; // fill property name
         console.log('%d: %s %s', id, completed && 'DONE' || 'TODO', title);
       });
     });

@@ -20,7 +20,7 @@ googleapis.discover('datastore', 'v1beta1', {
   });
 });
 
-var __TODO__ = null;
+var __FIXME__ = null;
 
 var commands = {
   add: function(todoTitle) {
@@ -130,13 +130,13 @@ var commands = {
     });
   },
   archive: function() {
-    datastore.__TODO__({ // fill the rpc name to start a transaction
+    datastore.__FIXME__({ // fill the rpc name to start a transaction
       datasetId: datasetId
     }).withAuthClient(compute).execute(function(err, result) {
       datastore.runquery({
         datasetId: datasetId,
         // fill with transaction handle
-        readOptions: { transaction: __TODO__ },
+        readOptions: { transaction: __FIXME__ },
         query: {
           kinds: [{ name: 'Todo' }],
           filter: {
@@ -144,26 +144,26 @@ var commands = {
               operator: 'and',
               filters: [{
                 // fill the ancestor filter
-                propertyFilter: __TODO__
+                propertyFilter: __FIXME__
               },{
                 // fill the property filter
-                propertyFilter: __TODO__
+                propertyFilter: __FIXME__
               }]
             }
           }
         }
       }).withAuthClient(compute).execute(function(err, result) {
-        var keys = __TODO__; // get the entity keys result
+        var keys = __FIXME__; // get the entity keys result
         datastore.commit({
           datasetId: datasetId,
-          transaction: __TODO__, // set the transaction andle
+          transaction: __FIXME__, // set the transaction andle
           mutation: {
-            __TODO__: keys // set the mutation type
+            __FIXME__: keys // set the mutation type
           }      
         }).withAuthClient(compute).execute(function(err, result) {
           console.assert(!err, err);
           keys.forEach(function(key) {
-            console.log(__TODO__); // print the delete keys
+            console.log(__FIXME__); // print the delete keys
           });
         });
       });

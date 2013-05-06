@@ -26,21 +26,14 @@ exports.actions = function(req, res, ss) {
       datastore.runquery({
         datasetId: datasetId,
         query: {
-          kinds: [{
-            name: 'Todo',
-          }],
+          kinds: [{ name: 'Todo' }],
           filter: {
             propertyFilter: {
-              property: {
-                name: '__key__'
-              },
+              property: { name: '__key__' },
               operator: 'hasAncestor',
               value: {
                 keyValue: {
-                  path: [{
-                    kind: 'TodoList',
-                    name: todoListName
-                  }]
+                  path: [{ kind: 'TodoList', name: todoListName }]
                 }
               }
             }
@@ -68,13 +61,8 @@ exports.actions = function(req, res, ss) {
         datasetId: datasetId,
         mutation: {
           delete: [{
-            path: [{
-              kind: 'TodoList',
-              name: todoListName,
-            },{
-              kind: 'Todo',
-              name: id
-            }]
+            path: [{ kind: 'TodoList', name: todoListName },
+                   { kind: 'Todo', name: id }]
           }]
         }      
       }).withAuthClient(compute).execute(function(err, result) {
@@ -88,25 +76,12 @@ exports.actions = function(req, res, ss) {
         mutation: {
           upsert: [{
             key: {
-              path: [,{
-                kind: 'TodoList',
-                name: todoListName,
-              },{
-                kind: 'Todo',
-                name: todo.id
-              }]
+              path: [{ kind: 'TodoList', name: todoListName },
+                     { kind: 'Todo', name: todo.id }]
             },
             properties: {
-              title: {
-                values: [{
-                  stringValue: todo.title
-                }]
-              },
-              completed: {
-                values: [{
-                  booleanValue: todo.completed
-                }]
-              }
+              title: { values: [{ stringValue: todo.title }] },
+              completed: { values: [{ booleanValue: todo.completed }] }
             }
           }]
         }
@@ -118,36 +93,25 @@ exports.actions = function(req, res, ss) {
       datastore.runquery({
         datasetId: datasetId,
         query: {
-          kinds: [{
-            name: 'Todo',
-          }],
+          kinds: [{ name: 'Todo' }],
           filter: {
             compositeFilter: {
               operator: 'and',
               filters: [{
                 propertyFilter: {
-                  property: {
-                    name: '__key__'
-                  },
+                  property: { name: '__key__' },
                   operator: 'hasAncestor',
                   value: {
                     keyValue: {
-                      path: [{
-                        kind: 'TodoList',
-                              name: todoListName
-                      }]
+                      path: [{ kind: 'TodoList', name: todoListName }]
                     }
-                        }
+                  }
                 }
               },{
                 propertyFilter: {
-                  property: {
-                    name: 'completed'
-                  },
+                  property: { name: 'completed' },
                   operator: 'equal',
-                  value: {
-                    booleanValue: true
-                  }
+                  value: { booleanValue: true }
                 }
               }]
             }

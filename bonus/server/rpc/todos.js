@@ -18,27 +18,27 @@ googleapis.discover('datastore', 'v1beta1', {
   });
 });
 
-var __TODO__ = null;
+var __FIXME__ = null;
 // Define actions which can be called from the client using
 // ss.rpc('demo.ACTIONNAME', param1, param2...)
 exports.actions = function(req, res, ss) {
   return {
     getAll: function () {
       var todos = {};
-      datastore.__TODO__(); // copy commands.ls implementatation
+      datastore.__FIXME__(); // copy commands.ls implementatation
       res(tt);
     },
     remove: function(id) {
       ss.publish.all('removeTodo', id);
-      datastore.__TODO__(); // copy commands.del implementatation
+      datastore.__FIXME__(); // copy commands.del implementatation
     },
     update: function(todo) {
       ss.publish.all('updateTodo', todo);
-      datastore.__TODO__(); // copy commands.edit implementatation
+      datastore.__FIXME__(); // copy commands.edit implementatation
     },
     archive: function() {
-      datastore.__TODO__().execute(function(err, result) { // copy commands.archive implementation
-        __TODO__forEach(function() { // for each deleted todos
+      datastore.__FIXME__().execute(function(err, result) { // copy commands.archive implementation
+        __FIXME__forEach(function() { // for each deleted todos
                 ss.publish.all('removeTodo', id);
         });
       });
