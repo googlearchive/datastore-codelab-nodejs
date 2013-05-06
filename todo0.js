@@ -23,61 +23,44 @@ googleapis.discover('datastore', 'v1beta1', {
 var __TODO__ = null;
 
 var commands = {
-  add: function(todoText) {
+  add: function(todoTitle) {
     datastore.blindwrite({
       datasetId: datasetId,
       mutation: {
         insertAutoId: [{
           key: {
-            path: [{
-              kind: 'TodoList',
-              name: todoListName,
-            },{
-              kind: 'Todo',
-            }]
+            path: [{ kind: 'TodoList', name: todoListName },
+                   { kind: 'Todo' }]
           },
           properties: {
-            title: {
-              values: [{
-                stringValue: todoText
-              }]
-            },
-            completed: {
-              values: [{
-                booleanValue: false
-              }]
-            }
+            title: { values: [{ stringValue: todoTitle }] },
+            completed: { values: [{ booleanValue: false }] }
           }
         }]
       }
     }).withAuthClient(compute).execute(function(err, result) {
       console.assert(!err, err);
       var key = result.mutationResult.insertAutoIdKeys[0];
-      console.log('%d: TODO %s', key.path[1].id, todoText);
+      console.log('%d: TODO %s', key.path[1].id, todoTitle);
     });    
   },
   get: function(id, callback) {
     datastore.lookup({
       datasetId: datasetId,
       keys: [{
-        path: [{
-          kind: 'TodoList',
-          name: todoListName
-        },{
-          kind: 'Todo',
-          id: id
-        }]
+        path: [{ kind: 'TodoList', name: todoListName},
+               { kind: 'Todo', id: id }]
       }]
     }).withAuthClient(compute).execute(function(err, result) {
       console.assert(!err, err);
       console.assert(!result.missing, 'todo %d: not found', id);
       var entity = result.found[0].entity;
-      var text = entity.properties.title.values[0].stringValue;
+      var title = entity.properties.title.values[0].stringValue;
       var completed = entity.properties.completed.values[0].booleanValue == true;
       if (callback) {
-        callback(err, id, text, completed);
+        callback(err, id, title, completed);
       } else {
-        console.log('%d: %s %s', id, completed && 'DONE' || 'TODO', text);
+        console.log('%d: %s %s', id, completed && 'DONE' || 'TODO', title);
       }
     });
   }

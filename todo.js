@@ -28,24 +28,12 @@ var commands = {
       mutation: {
         insertAutoId: [{
           key: {
-            path: [{
-              kind: 'TodoList',
-              name: todoListName,
-            },{
-              kind: 'Todo',
-            }]
+            path: [{ kind: 'TodoList', name: todoListName },
+                   { kind: 'Todo' }]
           },
           properties: {
-            title: {
-              values: [{
-                stringValue: todoTitle
-              }]
-            },
-            completed: {
-              values: [{
-                booleanValue: false
-              }]
-            }
+            title: { values: [{ stringValue: todoTitle }] },
+            completed: { values: [{ booleanValue: false }] }
           }
         }]
       }
@@ -59,13 +47,8 @@ var commands = {
     datastore.lookup({
       datasetId: datasetId,
       keys: [{
-        path: [{
-          kind: 'TodoList',
-          name: todoListName
-        },{
-          kind: 'Todo',
-          id: id
-        }]
+        path: [{ kind: 'TodoList', name: todoListName},
+               { kind: 'Todo', id: id }]
       }]
     }).withAuthClient(compute).execute(function(err, result) {
       console.assert(!err, err);
@@ -86,15 +69,10 @@ var commands = {
       datasetId: datasetId,
       mutation: {
         delete: [{
-          path: [{
-            kind: 'TodoList',
-            name: todoListName,
-          },{
-            kind: 'Todo',
-            id: id
-          }]
+          path: [{ kind: 'TodoList', name: todoListName },
+                 { kind: 'Todo', id: id }]
         }]
-      }      
+      }   
     }).withAuthClient(compute).execute(function(err, result) {
       console.assert(!err, err);
       console.log('%d: DEL', id);
@@ -108,25 +86,12 @@ var commands = {
       mutation: {
         update: [{
           key: {
-            path: [,{
-              kind: 'TodoList',
-              name: todoListName,
-            },{
-              kind: 'Todo',
-              id: id
-            }]
+            path: [{ kind: 'TodoList', name: todoListName },
+                   { kind: 'Todo', id: id } ]
           },
           properties: {
-            title: {
-              values: [{
-                stringValue: title
-              }]
-            },
-            completed: {
-              values: [{
-                booleanValue: completed
-              }]
-            }
+            title: { values: [{ stringValue: title }] },
+            completed: { values: [{ booleanValue: completed }] }
           }
         }]
       }
@@ -135,25 +100,18 @@ var commands = {
       console.log('%d: %s %s', id, completed && 'DONE' || 'TODO', title);
     });
   },
-  ls: function () {
+  ls: function() {
     datastore.runquery({
       datasetId: datasetId,
       query: {
-        kinds: [{
-          name: 'Todo',
-        }],
+        kinds: [{ name: 'Todo' }],
         filter: {
           propertyFilter: {
-            property: {
-              name: '__key__'
-            },
+            property: { name: '__key__' },
             operator: 'hasAncestor',
-            value: {
+            value: { 
               keyValue: {
-                path: [{
-                  kind: 'TodoList',
-                  name: todoListName
-                }]
+                path: [{ kind: 'TodoList', name: todoListName }]
               }
             }
           }
@@ -180,45 +138,30 @@ var commands = {
       var tx = result.transaction;
       datastore.runquery({
         datasetId: datasetId,
-        readOptions: {
-          transaction: tx
-        },
+        readOptions: { transaction: tx },
         query: {
-          kinds: [{
-            name: 'Todo',
-          }],
+          kinds: [{ name: 'Todo' }],
           filter: {
             compositeFilter: {
               operator: 'and',
               filters: [{
                 propertyFilter: {
-                  property: {
-                    name: '__key__'
-                  },
+                  property: { name: '__key__' },
                   operator: 'hasAncestor',
-                  value: {
-                    keyValue: {
-                      path: [{
-                        kind: 'TodoList',
-                        name: todoListName
-                      }]
-                    }
-                  }
+                  value: { keyValue: {
+                    path: [{ kind: 'TodoList', name: todoListName }]
+                  }}
                 }
-              },{
+              }, {
                 propertyFilter: {
-                  property: {
-                    name: 'completed'
-                  },
+                  property: { name: 'completed' },
                   operator: 'equal',
-                  value: {
-                    booleanValue: true
-                  }
+                  value: { booleanValue: true }
                 }
               }]
             }
           }
-        }   
+        }
       }).withAuthClient(compute).execute(function(err, result) {
         var keys = [];
         var entityResults = result.batch.entityResults || [];
@@ -228,9 +171,7 @@ var commands = {
         datastore.commit({
           datasetId: datasetId,
           transaction: tx,
-          mutation: {
-            delete: keys
-          }      
+          mutation: { delete: keys }      
         }).withAuthClient(compute).execute(function(err, result) {
           console.assert(!err, err);
           keys.forEach(function(key) {

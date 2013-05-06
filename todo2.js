@@ -86,15 +86,10 @@ var commands = {
       datasetId: datasetId,
       mutation: {
         delete: [{
-          path: [{
-            kind: 'TodoList',
-            name: todoListName,
-          },{
-            kind: 'Todo',
-            id: id
-          }]
+          path: [{ kind: 'TodoList', name: todoListName },
+                 { kind: 'Todo', id: id }]
         }]
-      }      
+      }   
     }).withAuthClient(compute).execute(function(err, result) {
       console.assert(!err, err);
       console.log('%d: DEL', id);
@@ -105,27 +100,18 @@ var commands = {
     datastore.blindwrite({
       datasetId: datasetId,
       mutation: {
-        __TODO__: [{ // fill mutation name
+         // fill mutation name
+        __TODO__: [{
           key: {
-            path: [,{
-              kind: 'TodoList',
-              name: todoListName,
-            },{
-              kind: __TODO__, // fill entity key kind
-              id: __TODO__ // fill entity key id
-            }]
+            path: [{ kind: 'TodoList', name: todoListName },
+                    // fill entity key
+                   { kind: __TODO__, id: __TODO__ }]
           },
           properties: {
-            __TODO__ : { // fill property name
-              values: [{
-                stringValue: __TODO__ // fill property value
-              }]
-            },
-            __TODO__: { // fill property name
-              values: [{
-                booleanValue: __TODO__ // fill property value
-              }]
-            }
+             // fill property name and value
+            __TODO__: { values: [{ stringValue: __TODO__ }] },
+             // fill property name and value
+            __TODO__: { values: [{ booleanValue: __TODO__ }] },
           }
         }]
       }
@@ -134,25 +120,18 @@ var commands = {
       console.log('%d: %s %s', id, completed && 'DONE' || 'TODO', text);
     });
   },
-  ls: function () {
+  ls: functio () {
     datastore.runquery({
       datasetId: datasetId,
       query: {
-        kinds: [{
-          name: __TODO__, // fill entity kind
-        }],
+        kinds: [{ name: __TODO__ }], // fill entity kind
         filter: {
           propertyFilter: {
-            property: {
-              name: '__key__'
-            },
+            property: { name: '__key__' },
             operator: 'hasAncestor',
             value: {
               keyValue: {
-                path: [{
-                  kind: 'TodoList',
-                  name: todoListName
-                }]
+                path: [{ kind: 'TodoList', name: todoListName }]
               }
             }
           }
@@ -168,7 +147,6 @@ var commands = {
         var completed = properties.__TODO__.values[0].booleanValue == true; // fill property name
         console.log('%d: %s %s', id, completed && 'DONE' || 'TODO', title);
       });
-
     });
   }
 };

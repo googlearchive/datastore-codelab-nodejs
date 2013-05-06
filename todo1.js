@@ -23,50 +23,33 @@ googleapis.discover('datastore', 'v1beta1', {
 var __TODO__ = null;
 
 var commands = {
-  add: function(todoText) {
+  add: function(todoTitle) {
     datastore.blindwrite({
       datasetId: datasetId,
       mutation: {
         insertAutoId: [{
           key: {
-            path: [{
-              kind: 'TodoList',
-              name: todoListName,
-            },{
-              kind: 'Todo',
-            }]
+            path: [{ kind: 'TodoList', name: todoListName },
+                   { kind: 'Todo' }]
           },
           properties: {
-            title: {
-              values: [{
-                stringValue: todoText
-              }]
-            },
-            completed: {
-              values: [{
-                booleanValue: false
-              }]
-            }
+            title: { values: [{ stringValue: todoTitle }] },
+            completed: { values: [{ booleanValue: false }] }
           }
         }]
       }
     }).withAuthClient(compute).execute(function(err, result) {
       console.assert(!err, err);
       var key = result.mutationResult.insertAutoIdKeys[0];
-      console.log('%d: TODO %s', key.path[1].id, todoText);
+      console.log('%d: TODO %s', key.path[1].id, todoTitle);
     });    
   },
   get: function(id, callback) {
     datastore.lookup({
       datasetId: datasetId,
       keys: [{
-        path: [{
-          kind: 'TodoList',
-          name: todoListName
-        },{
-          kind: 'Todo',
-          id: id
-        }]
+        path: [{ kind: 'TodoList', name: todoListName},
+               { kind: 'Todo', id: id }]
       }]
     }).withAuthClient(compute).execute(function(err, result) {
       console.assert(!err, err);
@@ -86,15 +69,10 @@ var commands = {
       datasetId: datasetId,
       mutation: {
         __TODO__: [{ // fill mutation name.
-          path: [{
-            kind: 'TodoList',
-            name: todoListName,
-          },{
-            kind: 'Todo',
-            id: __TODO__ // fill entity key id.
-          }]
+          path: [{ kind: 'TodoList',  name: todoListName },
+                 { kind: 'Todo', id: __TODO__  }] // fill entity key id.
         }]
-      }      
+      }   
     }).withAuthClient(compute).execute(function(err, result) {
       console.assert(!err, err);
       console.log('%d: DEL', id);
