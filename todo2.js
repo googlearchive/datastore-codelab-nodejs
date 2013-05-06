@@ -120,7 +120,7 @@ var commands = {
       console.log('%d: %s %s', id, completed && 'DONE' || 'TODO', text);
     });
   },
-  ls: functio () {
+  ls: function () {
     datastore.runquery({
       datasetId: datasetId,
       query: {
