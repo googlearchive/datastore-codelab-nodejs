@@ -56,7 +56,7 @@ var commands = {
       console.log('%d: TODO %s', key.path[1].id, todoText);
     });    
   },
-  get: function(todoId, callback) {
+  get: function(id, callback) {
     datastore.lookup({
       datasetId: datasetId,
       keys: [{
@@ -65,23 +65,23 @@ var commands = {
           name: todoListName
         },{
           kind: 'Todo',
-          id: todoId
+          id: id
         }]
       }]
     }).withAuthClient(compute).execute(function(err, result) {
       console.assert(!err, err);
-      console.assert(!result.missing, 'todo %d: not found', todoId);
+      console.assert(!result.missing, 'todo %d: not found', id);
       var entity = result.found[0].entity;
-      var text = entity.properties.title.values[0].stringValue;
-      var done = entity.properties.completed.values[0].booleanValue == true;
+      var title = entity.properties.title.values[0].stringValue;
+      var completed = entity.properties.completed.values[0].booleanValue == true;
       if (callback) {
-        callback(err, todoId, text, done);
+        callback(err, id, title, completed);
       } else {
-        console.log('%d: %s %s', todoId, done && 'DONE' || 'TODO', text);
+        console.log('%d: %s %s', id, completed && 'DONE' || 'TODO', title);
       }
     });
   },
-  del: function(todoId) {
+  del: function(id) {
     datastore.blindwrite({
       datasetId: datasetId,
       mutation: {
@@ -97,7 +97,7 @@ var commands = {
       }      
     }).withAuthClient(compute).execute(function(err, result) {
       console.assert(!err, err);
-      console.log('%d: DEL', todoId);
+      console.log('%d: DEL', id);
     });
   }
 };

@@ -62,8 +62,8 @@ exports.actions = function(req, res, ss) {
         res(tt);
       });
     },
-    remove: function(todoId) {
-      ss.publish.all('removeTodo', todoId);
+    remove: function(id) {
+      ss.publish.all('removeTodo', id);
       datastore.blindwrite({
         datasetId: datasetId,
         mutation: {
@@ -73,7 +73,7 @@ exports.actions = function(req, res, ss) {
               name: todoListName,
             },{
               kind: 'Todo',
-              name: todoId
+              name: id
             }]
           }]
         }      

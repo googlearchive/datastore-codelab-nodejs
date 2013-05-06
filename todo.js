@@ -22,7 +22,7 @@ googleapis.discover('datastore', 'v1beta1', {
 
 var commands = {
   // level 0
-  add: function(todoText) {
+  add: function(todoTitle) {
     datastore.blindwrite({
       datasetId: datasetId,
       mutation: {
@@ -38,7 +38,7 @@ var commands = {
           properties: {
             title: {
               values: [{
-                stringValue: todoText
+                stringValue: todoTitle
               }]
             },
             completed: {
@@ -52,10 +52,10 @@ var commands = {
     }).withAuthClient(compute).execute(function(err, result) {
       console.assert(!err, err);
       var key = result.mutationResult.insertAutoIdKeys[0];
-      console.log('%d: TODO %s', key.path[1].id, todoText);
+      console.log('%d: TODO %s', key.path[1].id, todoTitle);
     });    
   },
-  get: function(todoId, callback) {
+  get: function(id, callback) {
     datastore.lookup({
       datasetId: datasetId,
       keys: [{
@@ -64,24 +64,24 @@ var commands = {
           name: todoListName
         },{
           kind: 'Todo',
-          id: todoId
+          id: id
         }]
       }]
     }).withAuthClient(compute).execute(function(err, result) {
       console.assert(!err, err);
-      console.assert(!result.missing, 'todo %d: not found', todoId);
+      console.assert(!result.missing, 'todo %d: not found', id);
       var entity = result.found[0].entity;
-      var text = entity.properties.title.values[0].stringValue;
-      var done = entity.properties.completed.values[0].booleanValue == true;
+      var title = entity.properties.title.values[0].stringValue;
+      var completed = entity.properties.completed.values[0].booleanValue == true;
       if (callback) {
-        callback(err, todoId, text, done);
+        callback(err, id, title, completed);
       } else {
-        console.log('%d: %s %s', todoId, done && 'DONE' || 'TODO', text);
+        console.log('%d: %s %s', id, completed && 'DONE' || 'TODO', title);
       }
     });
   },
   // level 1
-  del: function(todoId) {
+  del: function(id) {
     datastore.blindwrite({
       datasetId: datasetId,
       mutation: {
@@ -91,18 +91,18 @@ var commands = {
             name: todoListName,
           },{
             kind: 'Todo',
-            id: todoId
+            id: id
           }]
         }]
       }      
     }).withAuthClient(compute).execute(function(err, result) {
       console.assert(!err, err);
-      console.log('%d: DEL', todoId);
+      console.log('%d: DEL', id);
     });
   },
   // level 2
-  edit: function(id, text, done) {
-    done = done === 'true';
+  edit: function(id, title, completed) {
+    completed = completed === 'true';
     datastore.blindwrite({
       datasetId: datasetId,
       mutation: {
@@ -119,12 +119,12 @@ var commands = {
           properties: {
             title: {
               values: [{
-                stringValue: text
+                stringValue: title
               }]
             },
             completed: {
               values: [{
-                booleanValue: done
+                booleanValue: completed
               }]
             }
           }
@@ -132,7 +132,7 @@ var commands = {
       }
     }).withAuthClient(compute).execute(function(err, result) {
       console.assert(!err, err);
-      console.log('%d: %s %s', id, done && 'DONE' || 'TODO', text);
+      console.log('%d: %s %s', id, completed && 'DONE' || 'TODO', title);
     });
   },
   ls: function () {
@@ -166,8 +166,8 @@ var commands = {
         var id = entity.key.path[1].id;
         var properties = entity.properties;
         var title = properties.title.values[0].stringValue;
-        var done = properties.completed.values[0].booleanValue == true;
-        console.log('%d: %s %s', id, done && 'DONE' || 'TODO', title);
+        var completed = properties.completed.values[0].booleanValue == true;
+        console.log('%d: %s %s', id, completed && 'DONE' || 'TODO', title);
       });
 
     });

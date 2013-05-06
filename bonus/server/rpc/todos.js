@@ -28,8 +28,8 @@ exports.actions = function(req, res, ss) {
       datastore.__TODO__(); // copy commands.ls implementatation
       res(tt);
     },
-    remove: function(todoId) {
-      ss.publish.all('removeTodo', todoId);
+    remove: function(id) {
+      ss.publish.all('removeTodo', id);
       datastore.__TODO__(); // copy commands.del implementatation
     },
     update: function(todo) {
