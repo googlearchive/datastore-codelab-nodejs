@@ -8,7 +8,7 @@ var todoListName = process.argv[2] || 'default';
 var datasetId = 'gcd-codelab';
 
 googleapis.discover('datastore', 'v1beta1', {
-  localDiscoveryFilePath: './datastore_v1beta1.json',
+  localDiscoveryFilePath: '../datastore_v1beta1.json',
 }).execute(function(err, client) {
   console.log(err, client);
   compute = new googleapis.auth.Compute()
@@ -37,7 +37,7 @@ exports.actions = function(req, res, ss) {
               operator: 'hasAncestor',
               value: {
                 keyValue: {
-                  pathElements: [{
+                  path: [{
                     kind: 'TodoList',
                     name: todoListName
                   }]
@@ -50,7 +50,7 @@ exports.actions = function(req, res, ss) {
         var tt = {};
         var entityResults = result.batch.entityResults || [];
         entityResults.forEach(function(entityResult) {
-          var id = entityResult.entity.key.pathElements[1].name;
+          var id = entityResult.entity.key.path[1].name;
           var title = entityResult.entity.properties.title.values[0].stringValue;
           var completed = entityResult.entity.properties.completed.values[0].booleanValue;
           tt[id] = {
@@ -68,7 +68,7 @@ exports.actions = function(req, res, ss) {
         datasetId: datasetId,
         mutation: {
           delete: [{
-            pathElements: [{
+            path: [{
               kind: 'TodoList',
               name: todoListName,
             },{
@@ -88,7 +88,7 @@ exports.actions = function(req, res, ss) {
         mutation: {
           upsert: [{
             key: {
-              pathElements: [,{
+              path: [,{
                 kind: 'TodoList',
                 name: todoListName,
               },{
@@ -132,7 +132,7 @@ exports.actions = function(req, res, ss) {
                   operator: 'hasAncestor',
                   value: {
                     keyValue: {
-                      pathElements: [{
+                      path: [{
                         kind: 'TodoList',
                               name: todoListName
                       }]
@@ -158,7 +158,7 @@ exports.actions = function(req, res, ss) {
         var entityResults = result.batch.entityResults || [];
         entityResults.forEach(function(entityResult) {
           keys.push(entityResult.entity.key);
-          var id = entityResult.entity.key.pathElements[1].name;
+          var id = entityResult.entity.key.path[1].name;
           ss.publish.all('removeTodo', id);
         });
         datastore.blindwrite({

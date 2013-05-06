@@ -29,7 +29,7 @@ var commands = {
       mutation: {
         insertAutoId: [{
           key: {
-            pathElements: [{
+            path: [{
               kind: 'TodoList',
               name: todoListName,
             },{
@@ -53,14 +53,14 @@ var commands = {
     }).withAuthClient(compute).execute(function(err, result) {
       console.assert(!err, err);
       var key = result.mutationResult.insertAutoIdKeys[0];
-      console.log('%d: TODO %s', key.pathElements[1].id, todoText);
+      console.log('%d: TODO %s', key.path[1].id, todoText);
     });    
   },
   get: function(todoId, callback) {
     datastore.lookup({
       datasetId: datasetId,
       keys: [{
-        pathElements: [{
+        path: [{
           kind: 'TodoList',
           name: todoListName
         },{
@@ -86,7 +86,7 @@ var commands = {
       datasetId: datasetId,
       mutation: {
         __TODO__: [{ // fill mutation name.
-          pathElements: [{
+          path: [{
             kind: 'TodoList',
             name: todoListName,
           },{

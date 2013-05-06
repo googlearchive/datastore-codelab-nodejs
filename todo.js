@@ -28,7 +28,7 @@ var commands = {
       mutation: {
         insertAutoId: [{
           key: {
-            pathElements: [{
+            path: [{
               kind: 'TodoList',
               name: todoListName,
             },{
@@ -52,14 +52,14 @@ var commands = {
     }).withAuthClient(compute).execute(function(err, result) {
       console.assert(!err, err);
       var key = result.mutationResult.insertAutoIdKeys[0];
-      console.log('%d: TODO %s', key.pathElements[1].id, todoText);
+      console.log('%d: TODO %s', key.path[1].id, todoText);
     });    
   },
   get: function(todoId, callback) {
     datastore.lookup({
       datasetId: datasetId,
       keys: [{
-        pathElements: [{
+        path: [{
           kind: 'TodoList',
           name: todoListName
         },{
@@ -86,7 +86,7 @@ var commands = {
       datasetId: datasetId,
       mutation: {
         delete: [{
-          pathElements: [{
+          path: [{
             kind: 'TodoList',
             name: todoListName,
           },{
@@ -108,7 +108,7 @@ var commands = {
       mutation: {
         update: [{
           key: {
-            pathElements: [,{
+            path: [,{
               kind: 'TodoList',
               name: todoListName,
             },{
@@ -150,7 +150,7 @@ var commands = {
             operator: 'hasAncestor',
             value: {
               keyValue: {
-                pathElements: [{
+                path: [{
                   kind: 'TodoList',
                   name: todoListName
                 }]
@@ -163,7 +163,7 @@ var commands = {
       var entityResults = result.batch.entityResults || [];
       entityResults.forEach(function(entityResult) {
         var entity = entityResult.entity;
-        var id = entity.key.pathElements[1].id;
+        var id = entity.key.path[1].id;
         var properties = entity.properties;
         var title = properties.title.values[0].stringValue;
         var done = properties.completed.values[0].booleanValue == true;
@@ -198,7 +198,7 @@ var commands = {
                   operator: 'hasAncestor',
                   value: {
                     keyValue: {
-                      pathElements: [{
+                      path: [{
                         kind: 'TodoList',
                         name: todoListName
                       }]
@@ -234,7 +234,7 @@ var commands = {
         }).withAuthClient(compute).execute(function(err, result) {
           console.assert(!err, err);
           keys.forEach(function(key) {
-            console.log('%d: DEL', key.pathElements[1].id);
+            console.log('%d: DEL', key.path[1].id);
           });
         });
       });

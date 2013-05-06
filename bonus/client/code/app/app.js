@@ -15,7 +15,7 @@
       var self = this;
       this.ENTER_KEY = 13;
 
-      ss.rpc('todo4.getAll', function (todos) {
+      ss.rpc('todos.getAll', function (todos) {
 	self.todos = todos;
 	self.cacheElements();
 	self.bindEvents();
@@ -101,7 +101,7 @@
 
       $.each(App.todos, function (i, val) {
 	val.completed = isChecked;
-        ss.rpc('todo4.update', val);
+        ss.rpc('todos.update', val);
       });
 
       App.render();
@@ -127,7 +127,7 @@
 	  todos.splice(l, 1);
 	}
       }
-      ss.rpc('todo4.archive');
+      ss.rpc('todos.archive');
       App.render();
     },
 
@@ -153,7 +153,7 @@
 	completed: false
       };
       App.todos[id] = todo;
-      ss.rpc('todo4.update', todo);
+      ss.rpc('todos.update', todo);
 
       $input.val('');
 
@@ -163,7 +163,7 @@
     toggle: function () {
       App.getTodo(this, function (i, val) {
 	val.completed = !val.completed;
-        ss.rpc('todo4.update', val);
+        ss.rpc('todos.update', val);
       });
 
       App.render();
@@ -184,9 +184,9 @@
       App.getTodo(this, function (id, todo) {
 	if (val) {
 	  todo.title = val;
-          ss.rpc('todo4.update', todo);
+          ss.rpc('todos.update', todo);
 	} else {
-          ss.rpc('todo4.remove', id);
+          ss.rpc('todos.remove', id);
 	  delete this.todos[id];
 	}
 	this.render();
@@ -195,7 +195,7 @@
     
     destroy: function () {
       App.getTodo(this, function (id, todo) {
-        ss.rpc('todo4.remove', id);
+        ss.rpc('todos.remove', id);
         delete this.todos[id];
 	this.render();
       });

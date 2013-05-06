@@ -1,7 +1,5 @@
 // Server-side code
 
-// All the todos are stored in an in-memory array on the server
-// This should not be done in production apps
 var googleapis = require('googleapis');
 var authclient = new googleapis.OAuth2Client();
 var datastore;
@@ -10,7 +8,7 @@ var todoListName = process.argv[2] || 'default';
 var datasetId = 'gcd-codelab';
 
 googleapis.discover('datastore', 'v1beta1', {
-  localDiscoveryFilePath: './datastore_v1beta1.json',
+  localDiscoveryFilePath: '../datastore_v1beta1.json',
 }).execute(function(err, client) {
   console.log(err, client);
   compute = new googleapis.auth.Compute()
