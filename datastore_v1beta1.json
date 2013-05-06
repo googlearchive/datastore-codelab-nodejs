@@ -1,6 +1,6 @@
 {
  "kind": "discovery#rpcDescription",
- "etag": "\"_7-ccQ6l6D83rW0ywoKjtwCTibA/8sP33nz--LUWdR1k-4W0So1uM70\"",
+ "etag": "\"4HRUf4Zy9cJPBCkkgfDvTeatwd8/on5_A7WxTKnEg0RWtX_3I1vN4sE\"",
  "discoveryVersion": "v1",
  "id": "datastore:v1beta1",
  "name": "datastore",
@@ -64,6 +64,15 @@
    "type": "string",
    "description": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
    "location": "query"
+  }
+ },
+ "auth": {
+  "oauth2": {
+   "scopes": {
+    "https://www.googleapis.com/auth/userinfo.email": {
+     "description": "View your email address"
+    }
+   }
   }
  },
  "schemas": {
@@ -207,7 +216,7 @@
      "$ref": "PartitionId",
      "description": "The ID of the partition containing the entity."
     },
-    "pathElements": {
+    "path": {
      "type": "array",
      "description": "The path of the entity.\n\nEach path element identifies an ancestor entity. The last path element identifies the entity, the next-to-last path element identifies the entity's parent, and so forth. The last path element and ONLY the last path element may be incomplete. A path is complete if ALL of its path elements are complete. Any other path is incomplete. A path must be complete unless otherwise documented. A path must not be empty.",
      "items": {
@@ -653,7 +662,10 @@
    ],
    "returns": {
     "$ref": "AllocateIdsResponse"
-   }
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
   },
   "datastore.datasets.begintransaction": {
    "id": "datastore.datasets.begintransaction",
@@ -674,7 +686,10 @@
    ],
    "returns": {
     "$ref": "BeginTransactionResponse"
-   }
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
   },
   "datastore.datasets.blindwrite": {
    "id": "datastore.datasets.blindwrite",
@@ -695,7 +710,10 @@
    ],
    "returns": {
     "$ref": "BlindWriteResponse"
-   }
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
   },
   "datastore.datasets.commit": {
    "id": "datastore.datasets.commit",
@@ -721,7 +739,10 @@
    ],
    "returns": {
     "$ref": "CommitResponse"
-   }
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
   },
   "datastore.datasets.lookup": {
    "id": "datastore.datasets.lookup",
@@ -749,7 +770,10 @@
    ],
    "returns": {
     "$ref": "LookupResponse"
-   }
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
   },
   "datastore.datasets.rollback": {
    "id": "datastore.datasets.rollback",
@@ -771,7 +795,10 @@
    ],
    "returns": {
     "$ref": "RollbackResponse"
-   }
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
   },
   "datastore.datasets.runquery": {
    "id": "datastore.datasets.runquery",
@@ -800,7 +827,10 @@
    ],
    "returns": {
     "$ref": "RunQueryResponse"
-   }
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
   }
  }
 }
