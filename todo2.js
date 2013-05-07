@@ -23,7 +23,7 @@ googleapis.discover('datastore', 'v1beta1', {
 var __FIXME__ = null;
 
 var commands = {
-  add: function(todoText) {
+  add: function(todoTitle) {
     datastore.blindwrite({
       datasetId: datasetId,
       mutation: {
@@ -39,7 +39,7 @@ var commands = {
           properties: {
             title: {
               values: [{
-                stringValue: todoText
+                stringValue: todoTitle
               }]
             },
             completed: {
@@ -53,7 +53,7 @@ var commands = {
     }).withAuthClient(compute).execute(function(err, result) {
       console.assert(!err, err);
       var key = result.mutationResult.insertAutoIdKeys[0];
-      console.log('%d: TODO %s', key.path[1].id, todoText);
+      console.log('%d: TODO %s', key.path[1].id, todoTitle);
     });    
   },
   get: function(id, callback) {
@@ -72,12 +72,12 @@ var commands = {
       console.assert(!err, err);
       console.assert(!result.missing, 'todo %d: not found', id);
       var entity = result.found[0].entity;
-      var text = entity.properties.title.values[0].stringValue;
+      var title = entity.properties.title.values[0].stringValue;
       var completed = entity.properties.completed.values[0].booleanValue == true;
       if (callback) {
-        callback(err, id, text, completed);
+        callback(err, id, title, completed);
       } else {
-        console.log('%d: %s %s', id, completed && 'DONE' || 'TODO', text);
+        console.log('%d: %s %s', id, completed && 'DONE' || 'TODO', title);
       }
     });
   },
@@ -95,7 +95,7 @@ var commands = {
       console.log('%d: DEL', id);
     });
   },
-  edit: function(id, text, completed) {
+  edit: function(id, title, completed) {
     completed = completed === 'true';
     datastore.blindwrite({
       datasetId: datasetId,
@@ -117,7 +117,7 @@ var commands = {
       }
     }).withAuthClient(compute).execute(function(err, result) {
       console.assert(!err, err);
-      console.log('%d: %s %s', id, completed && 'DONE' || 'TODO', text);
+      console.log('%d: %s %s', id, completed && 'DONE' || 'TODO', title);
     });
   },
   ls: function () {
