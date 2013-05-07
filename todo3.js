@@ -133,6 +133,8 @@ var commands = {
     datastore.__FIXME__({ // fill the rpc name to start a transaction
       datasetId: datasetId
     }).withAuthClient(compute).execute(function(err, result) {
+      // Store transaction id in the current scope
+      var tx = __FIXME__;
       datastore.runquery({
         datasetId: datasetId,
         // fill with transaction handle
