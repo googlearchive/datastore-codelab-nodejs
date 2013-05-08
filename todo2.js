@@ -89,7 +89,7 @@ var commands = {
           path: [{ kind: 'TodoList', name: todoListName },
                  { kind: 'Todo', id: id }]
         }]
-      }   
+      }
     }).withAuthClient(compute).execute(function(err, result) {
       console.assert(!err, err);
       console.log('%d: DEL', id);
@@ -136,7 +136,7 @@ var commands = {
             }
           }
         }
-      }   
+      }
     }).withAuthClient(compute).execute(function(err, result) {
       var entityResults = result.batch.entityResults || [];
       entityResults.forEach(function(entityResult) {

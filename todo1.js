@@ -42,7 +42,7 @@ var commands = {
       console.assert(!err, err);
       var key = result.mutationResult.insertAutoIdKeys[0];
       console.log('%d: TODO %s', key.path[1].id, title);
-    });    
+    });
   },
   get: function(id, callback) {
     datastore.lookup({
@@ -72,7 +72,7 @@ var commands = {
           path: [{ kind: 'TodoList',  name: todoListName },
                  { kind: 'Todo', id: __FIXME__  }] // fill entity key id.
         }]
-      }   
+      }
     }).withAuthClient(compute).execute(function(err, result) {
       console.assert(!err, err);
       console.log('%d: DEL', id);
