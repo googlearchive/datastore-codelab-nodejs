@@ -1,8 +1,6 @@
 #! /usr/bin/env node
 
-var __FIXME__ = null;
-
-var gcdHelper = __FIXME__; // import your external helper library
+var gcdHelper = require('./helper');
 
 var googleapis = require('googleapis'),
     authclient = new googleapis.OAuth2Client(),
@@ -26,37 +24,171 @@ googleapis.discover('datastore', 'v1beta1', {
 
 var commands = {
   add: function(title) {
-    // You need to send a blindwrite request with an insertAutoId.
-    __FIXME__;
+    var mutation = new gcdHelper.MutationBuilder()
+      .insertAutoId(
+        // Key is a constructor for building a key
+        new gcdHelper.Key('TodoList', todoListName, 'Todo'),
+        // properties follow
+        {title: {stringValue: title}}, // you can pass an object
+        {completed: [{booleanValue: false}]} // as well as an array of objects
+      ).build();
 
+    var payload = {datasetId: datasetId,
+                   mutation: mutation};
+
+    console.log('Now sending the following payload:');
+    console.log(JSON.stringify(payload, null, 2));
+
+    datastore.blindwrite(payload).withAuthClient(compute).execute(
+      function(err, result) {
+        console.assert(!err, err);
+        var key = result.mutationResult.insertAutoIdKeys[0];
+        console.log('%d: TODO %s', key.path[1].id, title);
+      });
   },
   get: function(id, callback) {
-    // You need to send a lookup request with a key generated with id.
-    __FIXME__;
+    var key = new gcdHelper.Key(
+      'TodoList', todoListName,
+      'Todo', Number(id)); // id needs to cast to Number
 
+    console.log('Now getting with the following key:');
+    console.log(JSON.stringify(key, null, 2));
+
+    datastore.lookup({
+      datasetId: datasetId,
+      keys: [key]
+    }).withAuthClient(compute).execute(function(err, result) {
+      console.assert(!err, err);
+      console.assert(!result.missing, 'todo %d: not found', id);
+      var entity = result.found[0].entity;
+      var title = entity.properties.title.values[0].stringValue;
+      var completed = entity.properties.completed.values[0].booleanValue == true;
+      if (callback) {
+        callback(err, id, title, completed);
+      } else {
+        console.log('%d: %s %s', id, completed && 'DONE' || 'TODO', title);
+      }
+    });
   },
   del: function(id) {
-    // You need to construct the 'delete' mutation object with the
-    // given todoId and send a blindwrite request.
-    __FIXME__;
+    var mutation = new gcdHelper.MutationBuilder()
+      .delete(
+        new gcdHelper.Key('TodoList', todoListName, 'Todo', Number(id))
+      ).build();
 
+    console.log('Now sending the following mutation object:');
+    console.log(JSON.stringify(mutation, null, 2));
+
+    datastore.blindwrite({
+      datasetId: datasetId,
+      mutation: mutation
+    }).withAuthClient(compute).execute(function(err, result) {
+      console.assert(!err, err);
+      console.log('%d: DEL', id);
+    });
   },
   edit: function(id, title, completed) {
     completed = completed === 'true';
 
-    // You need to construct the 'update' mutation object with the
-    // given todoId and send a blindwrite request.
-    __FIXME__;
+    var mutation = new gcdHelper.MutationBuilder()
+      .update(
+        new gcdHelper.Key('TodoList', todoListName, 'Todo', Number(id)),
+        {title: {stringValue: title}},
+        {completed: [{booleanValue: completed}]}
+      ).build();
 
+    var payload = {datasetId: datasetId,
+                   mutation: mutation};
+
+    console.log('Now sending the following payload:');
+    console.log(JSON.stringify(payload, null, 2));
+
+    datastore.blindwrite({
+      datasetId: datasetId,
+      mutation: mutation
+    }).withAuthClient(compute).execute(function(err, result) {
+      console.assert(!err, err);
+      console.log('%d: %s %s', id, completed && 'DONE' || 'TODO', title);
+    });
   },
   ls: function () {
-    // Send a query request with an ancestor filter.
-    __FIXME__;
+    datastore.runquery({
+      datasetId: datasetId,
+      query: {
+        kinds: [{ name: 'Todo' }],
+        filter: {
+          propertyFilter: {
+            property: { name: '__key__' },
+            operator: 'hasAncestor',
+            value: {
+              keyValue: {
+                path: [{ kind: 'TodoList', name: todoListName }]
+              }
+            }
+          }
+        }
+      }
+    }).withAuthClient(compute).execute(function(err, result) {
+      var entityResults = result.batch.entityResults || [];
+      entityResults.forEach(function(entityResult) {
+        var entity = entityResult.entity;
+        var id = entity.key.pathElements[1].id;
+        var properties = entity.properties;
+        var title = properties.title.values[0].stringValue;
+        var completed = properties.completed.values[0].booleanValue == true;
+        console.log('%d: %s %s', id, completed && 'DONE' || 'TODO', title);
+      });
 
+    });
   },
   archive: function() {
-    // Transactionally delete all completed todo entries.
-    __FIXME__;
-
+    datastore.begintransaction({
+      datasetId: datasetId
+    }).withAuthClient(compute).execute(function(err, result) {
+      var tx = result.transaction;
+      datastore.runquery({
+        datasetId: datasetId,
+        readOptions: { transaction: tx },
+        query: {
+          kinds: [{ name: 'Todo' }],
+          filter: {
+            compositeFilter: {
+              operator: 'and',
+              filters: [{
+                propertyFilter: {
+                  property: { name: '__key__' },
+                  operator: 'hasAncestor',
+                  value: { keyValue: {
+                    path: [{ kind: 'TodoList', name: todoListName }]
+                  }}
+                }
+              }, {
+                propertyFilter: {
+                  property: { name: 'completed' },
+                  operator: 'equal',
+                  value: { booleanValue: true }
+                }
+              }]
+            }
+          }
+        }
+      }).withAuthClient(compute).execute(function(err, result) {
+        var keys = [];
+        var entityResults = result.batch.entityResults || [];
+        entityResults.forEach(function(entityResult) {
+          keys.push(entityResult.entity.key);
+        });
+        datastore.commit({
+          datasetId: datasetId,
+          transaction: tx,
+          mutation: { delete: keys }
+        }).withAuthClient(compute).execute(function(err, result) {
+          console.assert(!err, err);
+          keys.forEach(function(key) {
+            console.log('%d: DEL', key.path[1].id);
+          });
+        });
+      });
+    });
   }
 };

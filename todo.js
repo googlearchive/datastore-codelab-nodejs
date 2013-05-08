@@ -109,14 +109,14 @@ var commands = {
           propertyFilter: {
             property: { name: '__key__' },
             operator: 'hasAncestor',
-            value: { 
+            value: {
               keyValue: {
                 path: [{ kind: 'TodoList', name: todoListName }]
               }
             }
           }
         }
-      }   
+      }
     }).withAuthClient(compute).execute(function(err, result) {
       var entityResults = result.batch.entityResults || [];
       entityResults.forEach(function(entityResult) {
@@ -171,7 +171,7 @@ var commands = {
         datastore.commit({
           datasetId: datasetId,
           transaction: tx,
-          mutation: { delete: keys }      
+          mutation: { delete: keys }
         }).withAuthClient(compute).execute(function(err, result) {
           console.assert(!err, err);
           keys.forEach(function(key) {

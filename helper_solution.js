@@ -1,6 +1,4 @@
 
-var __FIXME__ = null;
-
 function Key() {
   'use strict';
   if (! (this instanceof Key)) {
@@ -8,12 +6,16 @@ function Key() {
   }
   this.path = [];
   for (var i = 0; i < arguments.length; i += 2) {
-    // Fill the implementation in the for loop. `arguments` above is
-    // an array like objct which contains all of the arguments. Note
-    // that we're looping with `i += 2` increments.
-
-    __FIXME__;
-
+    // level4
+    var kind = arguments[i];
+    var name_or_id = arguments[i+1];
+    var pathElement = {kind: kind};
+    if (typeof name_or_id == 'string') {
+      pathElement.name = name_or_id;
+    } else if (typeof name_or_id == 'number') {
+      pathElement.id = name_or_id;
+    }
+    this.path.push(pathElement);
   }
 };
 
