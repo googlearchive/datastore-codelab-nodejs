@@ -23,7 +23,7 @@ googleapis.discover('datastore', 'v1beta1', {
 var __FIXME__ = null;
 
 var commands = {
-  add: function(todoTitle) {
+  add: function(title) {
     datastore.blindwrite({
       datasetId: datasetId,
       mutation: {
@@ -33,7 +33,7 @@ var commands = {
                    { kind: 'Todo' }]
           },
           properties: {
-            title: { values: [{ stringValue: todoTitle }] },
+            title: { values: [{ stringValue: title }] },
             completed: { values: [{ booleanValue: false }] }
           }
         }]
@@ -41,7 +41,7 @@ var commands = {
     }).withAuthClient(compute).execute(function(err, result) {
       console.assert(!err, err);
       var key = result.mutationResult.insertAutoIdKeys[0];
-      console.log('%d: TODO %s', key.path[1].id, todoTitle);
+      console.log('%d: TODO %s', key.path[1].id, title);
     });    
   },
   get: function(id, callback) {
