@@ -160,7 +160,7 @@ var commands = {
         var keys = [];
         var entityResults = result.batch.entityResults || [];
 
-	// Retrieve the keys from the result and put them in `keys` variable
+        // Retrieve the keys from the result and put them in `keys` variable
         __FIXME__;
 
         datastore.commit({
@@ -172,7 +172,13 @@ var commands = {
         }).withAuthClient(compute).execute(function(err, result) {
           console.assert(!err, err);
           keys.forEach(function(key) {
-            console.log(__FIXME__); // print the delete keys
+            // print the deleted todo's id
+            // [HINT] keys have the following format:
+            // key: {
+            //   path: [{ kind: 'TodoList', name: todoListName },
+            //          { kind: 'Todo', id: id } ]
+            //  },
+            console.log(__FIXME__);
           });
         });
       });
