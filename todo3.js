@@ -157,10 +157,15 @@ var commands = {
           }
         }
       }).withAuthClient(compute).execute(function(err, result) {
-        var keys = __FIXME__; // get the entity keys result
+        var keys = [];
+        var entityResults = result.batch.entityResults || [];
+
+	// Retrieve the keys from the result and put them in `keys` variable
+        __FIXME__;
+
         datastore.commit({
           datasetId: datasetId,
-          transaction: __FIXME__, // set the transaction andle
+          transaction: __FIXME__, // set the transaction handle
           mutation: {
             __FIXME__: keys // set the mutation type
           }
