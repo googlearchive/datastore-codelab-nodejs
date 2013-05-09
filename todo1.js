@@ -20,6 +20,8 @@ googleapis.discover('datastore', 'v1beta1', {
   });
 });
 
+// Don't edit me. This is a local variable definition solely for
+// preventing syntax errors.
 var __FIXME__ = null;
 
 var commands = {

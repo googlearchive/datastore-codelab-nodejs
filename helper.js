@@ -1,4 +1,6 @@
 
+// Don't edit me. This is a local variable definition solely for
+// preventing syntax errors.
 var __FIXME__ = null;
 
 function Key() {
