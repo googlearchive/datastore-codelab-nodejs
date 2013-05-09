@@ -161,7 +161,9 @@ var commands = {
         var entityResults = result.batch.entityResults || [];
 
         // Retrieve the keys from the result and put them in `keys` variable
-        __FIXME__;
+        entityResults.forEach(function(entityResult) {
+          keys.push(__FIXME__);
+        });
 
         datastore.commit({
           datasetId: datasetId,
