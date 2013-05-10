@@ -7,9 +7,7 @@ var compute;
 var todoListName = process.argv[2] || 'default';
 var datasetId = 'gcd-codelab';
 
-googleapis.discover('datastore', 'v1beta1', {
-  localDiscoveryFilePath: '../datastore_v1beta1.json',
-}).execute(function(err, client) {
+googleapis.discover('datastore', 'v1beta1').execute(function(err, client) {
   console.log(err, client);
   compute = new googleapis.auth.Compute()
   compute.authorize(function(err, result) {
@@ -23,7 +21,7 @@ googleapis.discover('datastore', 'v1beta1', {
 exports.actions = function(req, res, ss) {
   return {
     getAll: function () {
-      datastore.runquery({
+      datastore.runQuery({
         datasetId: datasetId,
         query: {
           kinds: [{ name: 'Todo' }],
@@ -57,7 +55,7 @@ exports.actions = function(req, res, ss) {
     },
     remove: function(id) {
       ss.publish.all('removeTodo', id);
-      datastore.blindwrite({
+      datastore.blindWrite({
         datasetId: datasetId,
         mutation: {
           delete: [{
@@ -71,7 +69,7 @@ exports.actions = function(req, res, ss) {
     },
     update: function(todo) {
       ss.publish.all('updateTodo', todo);
-      datastore.blindwrite({
+      datastore.blindWrite({
         datasetId: datasetId,
         mutation: {
           upsert: [{
@@ -90,7 +88,7 @@ exports.actions = function(req, res, ss) {
       });
     },
     archive: function() {
-      datastore.runquery({
+      datastore.runQuery({
         datasetId: datasetId,
         query: {
           kinds: [{ name: 'Todo' }],
@@ -125,7 +123,7 @@ exports.actions = function(req, res, ss) {
           var id = entityResult.entity.key.path[1].name;
           ss.publish.all('removeTodo', id);
         });
-        datastore.blindwrite({
+        datastore.blindWrite({
           datasetId: datasetId,
           mutation: {
             delete: keys

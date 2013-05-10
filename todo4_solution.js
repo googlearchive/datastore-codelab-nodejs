@@ -24,7 +24,7 @@ googleapis.discover('datastore', 'v1beta1', {
 
 var commands = {
   add: function(title) {
-    datastore.blindwrite({
+    datastore.blindWrite({
       datasetId: datasetId,
       mutation: {
         insertAutoId: [{
@@ -61,7 +61,7 @@ var commands = {
     });
   },
   del: function(id) {
-    datastore.blindwrite({
+    datastore.blindWrite({
       datasetId: datasetId,
       mutation: {
         delete: [{
@@ -76,7 +76,7 @@ var commands = {
   },
   edit: function(id, title, completed) {
     completed = completed === 'true';
-    datastore.blindwrite({
+    datastore.blindWrite({
       datasetId: datasetId,
       mutation: {
         update: [{
@@ -96,7 +96,7 @@ var commands = {
     });
   },
   ls: function() {
-    datastore.runquery({
+    datastore.runQuery({
       datasetId: datasetId,
       query: {
         kinds: [{ name: 'Todo' }],
@@ -126,11 +126,11 @@ var commands = {
     });
   },
   archive: function() {
-    datastore.begintransaction({
+    datastore.beginTransaction({
       datasetId: datasetId
     }).withAuthClient(compute).execute(function(err, result) {
       var tx = result.transaction;
-      datastore.runquery({
+      datastore.runQuery({
         datasetId: datasetId,
         readOptions: { transaction: tx },
         query: {

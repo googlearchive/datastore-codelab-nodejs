@@ -8,9 +8,7 @@ var googleapis = require('googleapis'),
     todoListName = null;
 
 var usage = 'usage todo.js <todolist> <add|get> [todo-title|todo-id]';
-googleapis.discover('datastore', 'v1beta1', {
-  localDiscoveryFilePath: './datastore_v1beta1.json',
-}).execute(function(err, client) {
+googleapis.discover('datastore', 'v1beta1').execute(function(err, client) {
   compute.authorize(function(err, result) {
     datastore = client.datastore.datasets;
     todoListName = process.argv[2];
@@ -22,7 +20,7 @@ googleapis.discover('datastore', 'v1beta1', {
 
 var commands = {
   add: function(title) {
-    datastore.blindwrite({
+    datastore.blindWrite({
       datasetId: datasetId,
       mutation: {
         insertAutoId: [{

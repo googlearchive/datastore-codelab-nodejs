@@ -7,9 +7,7 @@ var compute;
 var todoListName = process.argv[2] || 'default';
 var datasetId = 'gcd-codelab';
 
-googleapis.discover('datastore', 'v1beta1', {
-  localDiscoveryFilePath: '../datastore_v1beta1.json',
-}).execute(function(err, client) {
+googleapis.discover('datastore', 'v1beta1').execute(function(err, client) {
   console.log(err, client);
   compute = new googleapis.auth.Compute()
   compute.authorize(function(err, result) {

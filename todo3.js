@@ -8,9 +8,7 @@ var googleapis = require('googleapis'),
     todoListName = null;
 
 var usage = 'usage todo.js <todolist> <add|get|del|edit|ls|archive> [todo-title|todo-id]';
-googleapis.discover('datastore', 'v1beta1', {
-  localDiscoveryFilePath: './datastore_v1beta1.json',
-}).execute(function(err, client) {
+googleapis.discover('datastore', 'v1beta1').execute(function(err, client) {
   compute.authorize(function(err, result) {
     datastore = client.datastore.datasets;
     todoListName = process.argv[2];
@@ -26,7 +24,7 @@ var __FIXME__ = null;
 
 var commands = {
   add: function(title) {
-    datastore.blindwrite({
+    datastore.blindWrite({
       datasetId: datasetId,
       mutation: {
         insertAutoId: [{
@@ -67,7 +65,7 @@ var commands = {
     });
   },
   del: function(id) {
-    datastore.blindwrite({
+    datastore.blindWrite({
       datasetId: datasetId,
       mutation: {
         delete: [{
@@ -82,7 +80,7 @@ var commands = {
   },
   edit: function(id, title, completed) {
     completed = completed === 'true';
-    datastore.blindwrite({
+    datastore.blindWrite({
       datasetId: datasetId,
       mutation: {
         update: [{
@@ -102,7 +100,7 @@ var commands = {
     });
   },
   ls: function() {
-    datastore.runquery({
+    datastore.runQuery({
       datasetId: datasetId,
       query: {
         kinds: [{ name: 'Todo' }],
@@ -137,7 +135,7 @@ var commands = {
     }).withAuthClient(compute).execute(function(err, result) {
       // Store transaction id in the current scope
       var tx = __FIXME__;
-      datastore.runquery({
+      datastore.runQuery({
         datasetId: datasetId,
         // fill with transaction handle
         readOptions: { transaction: __FIXME__ },

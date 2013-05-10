@@ -8,9 +8,7 @@ var googleapis = require('googleapis'),
     todoListName = null;
 
 var usage = 'usage todo.js <todolist> <add|get|del|edit|ls|archive> [todo-title|todo-id]';
-googleapis.discover('datastore', 'v1beta1', {
-  localDiscoveryFilePath: './datastore_v1beta1.json',
-}).execute(function(err, client) {
+googleapis.discover('datastore', 'v1beta1').execute(function(err, client) {
   compute.authorize(function(err, result) {
     datastore = client.datastore.datasets;
     todoListName = process.argv[2];
@@ -23,7 +21,7 @@ googleapis.discover('datastore', 'v1beta1', {
 var commands = {
   // level 0
   add: function(title) {
-    datastore.blindwrite({
+    datastore.blindWrite({
       datasetId: datasetId,
       mutation: {
         insertAutoId: [{
@@ -65,7 +63,7 @@ var commands = {
   },
   // level 1
   del: function(id) {
-    datastore.blindwrite({
+    datastore.blindWrite({
       datasetId: datasetId,
       mutation: {
         delete: [{
@@ -81,7 +79,7 @@ var commands = {
   // level 2
   edit: function(id, title, completed) {
     completed = completed === 'true';
-    datastore.blindwrite({
+    datastore.blindWrite({
       datasetId: datasetId,
       mutation: {
         update: [{
@@ -101,7 +99,7 @@ var commands = {
     });
   },
   ls: function() {
-    datastore.runquery({
+    datastore.runQuery({
       datasetId: datasetId,
       query: {
         kinds: [{ name: 'Todo' }],
@@ -132,11 +130,11 @@ var commands = {
   },
   // level 3
   archive: function() {
-    datastore.begintransaction({
+    datastore.beginTransaction({
       datasetId: datasetId
     }).withAuthClient(compute).execute(function(err, result) {
       var tx = result.transaction;
-      datastore.runquery({
+      datastore.runQuery({
         datasetId: datasetId,
         readOptions: { transaction: tx },
         query: {
