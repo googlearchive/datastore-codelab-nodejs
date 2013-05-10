@@ -1,7 +1,5 @@
 #! /usr/bin/env node
 
-var gcdHelper = require('./helper');
-
 var googleapis = require('googleapis'),
     authclient = new googleapis.OAuth2Client(),
     datasetId = 'gcd-codelab',
@@ -26,28 +24,30 @@ var __FIXME__ = null;
 
 var commands = {
   add: function(title) {
+    var mutation = new MutationBuilder()
+      .insertAutoId(
+	// This is how to use the `Key` helper. Fill the FIXME part of
+	// the `Key` constructor at the bottom of this file.
+        new Key('TodoList', todoListName, 'Todo'),
+        // properties follow
+        {title: {stringValue: title}}, // you can pass an object
+        {completed: [{booleanValue: false}]} // as well as an array of objects
+      ).build();
+
     datastore.blindWrite({
       datasetId: datasetId,
-      mutation: {
-        insertAutoId: [{
-	  // This is how to use the `Key` helper. Edit the helper.js
-	  // and complete the helper implementation.
-          key: new gcdHelper.Key('TodoList', todoListName, 'Todo'),
-          properties: {
-            title: { values: [{ stringValue: title }] },
-            completed: { values: [{ booleanValue: false }] }
-          }
-        }]
-      }
-    }).withAuthClient(compute).execute(function(err, result) {
-      console.assert(!err, err);
-      var key = result.mutationResult.insertAutoIdKeys[0];
-      console.log('%d: TODO %s', key.path[1].id, title);
-    });
+      mutation: mutation
+    }).withAuthClient(compute).execute(
+      function(err, result) {
+        console.assert(!err, err);
+        var key = result.mutationResult.insertAutoIdKeys[0];
+        console.log('%d: TODO %s', key.path[1].id, title);
+      });
   },
   get: function(id, callback) {
     // Create the key from the given id with the `Key` helper.
     var key = __FIXME__;
+
     datastore.lookup({
       datasetId: datasetId,
       keys: [key]
@@ -65,14 +65,12 @@ var commands = {
     });
   },
   del: function(id) {
+    // Create a 'delete' mutation object with a key with the given id
+    var mutation = __FIXME__;
+
     datastore.blindWrite({
       datasetId: datasetId,
-      mutation: {
-        delete: [{
-          path: [{ kind: 'TodoList', name: todoListName },
-                 { kind: 'Todo', id: id }]
-        }]
-      }
+      mutation: mutation
     }).withAuthClient(compute).execute(function(err, result) {
       console.assert(!err, err);
       console.log('%d: DEL', id);
@@ -80,26 +78,20 @@ var commands = {
   },
   edit: function(id, title, completed) {
     completed = completed === 'true';
+
+    // Create a 'update' mutation object with a key with the given id and
+    // properties
+    var mutation = __FIXME__;
+
     datastore.blindWrite({
       datasetId: datasetId,
-      mutation: {
-        update: [{
-          key: {
-            path: [{ kind: 'TodoList', name: todoListName },
-                   { kind: 'Todo', id: id } ]
-          },
-          properties: {
-            title: { values: [{ stringValue: title }] },
-            completed: { values: [{ booleanValue: completed }] }
-          }
-        }]
-      }
+      mutation: mutation
     }).withAuthClient(compute).execute(function(err, result) {
       console.assert(!err, err);
       console.log('%d: %s %s', id, completed && 'DONE' || 'TODO', title);
     });
   },
-  ls: function() {
+  ls: function () {
     datastore.runQuery({
       datasetId: datasetId,
       query: {
@@ -179,4 +171,105 @@ var commands = {
       });
     });
   }
+};
+
+function Key() {
+  'use strict';
+  if (! (this instanceof Key)) {
+    throw new TypeError('Key must be called with "new" statement.');
+  }
+  this.path = [];
+  for (var i = 0; i < arguments.length; i += 2) {
+    // Fill the implementation in the for loop. `arguments` above is
+    // an array like objct which contains all of the arguments. Note
+    // that we're looping with `i += 2` increments.
+
+    __FIXME__;
+
+  }
+};
+
+function MutationBuilder() {
+  'use strict';
+  if (! (this instanceof MutationBuilder)) {
+    throw new TypeError(
+      'MutationBuilder  must be called with "new" statement.');
+  }
+  this.operations = {};
+};
+
+MutationBuilder.prototype.build = function() {
+  'use strict';
+  var mutation = {};
+  var isEmpty = true;
+  for (var operationKey in this.operations) {
+    isEmpty = false;
+    mutation[operationKey] = this.operations[operationKey];
+  }
+  if (isEmpty) {
+    throw new Error('No operation specified.');
+  }
+  return mutation;
+};
+
+MutationBuilder.prototype._addKey = function(operation) {
+  if (this.operations[operation] == undefined) {
+    this.operations[operation] = [];
+  }
+  for (var i = 1; i < arguments.length; i++) {
+    this.operations[operation].push(arguments[i]);
+  }
+  return this;
+}
+
+MutationBuilder.prototype._addEntry = function(operation) {
+  'use strict';
+  var properties = {};
+  for (var i = 2; i <= arguments.length; i++) {
+    for (var propKey in arguments[i]) {
+      if (arguments[i][propKey] instanceof Array) {
+        properties[propKey] = {values: arguments[i][propKey], multi: true};
+      } else {
+        properties[propKey] = {values: [arguments[i][propKey]]};
+      }
+    }
+  }
+  if (this.operations[operation] == undefined) {
+    this.operations[operation] = [];
+  }
+  this.operations[operation].push({
+    key: arguments[1],
+    properties: properties
+  });
+  return this;
+};
+
+MutationBuilder.prototype.upsert = function() {
+  var newArguments = [].slice.call(arguments);
+  newArguments.unshift('upsert');
+  return this._addEntry.apply(this, newArguments);
+};
+
+MutationBuilder.prototype.update = function() {
+  var newArguments = [].slice.call(arguments);
+  newArguments.unshift('update');
+  return this._addEntry.apply(this, newArguments);
+};
+
+MutationBuilder.prototype.insert = function() {
+  var newArguments = [].slice.call(arguments);
+  newArguments.unshift('insert');
+  return this._addEntry.apply(this, newArguments);
+};
+
+MutationBuilder.prototype.insertAutoId = function() {
+  var newArguments = [].slice.call(arguments);
+  newArguments.unshift('insertAutoId');
+  return this._addEntry.apply(this, newArguments);
+};
+
+MutationBuilder.prototype.delete = function() {
+  var newArguments = [].slice.call(arguments);
+  newArguments.unshift('delete');
+  return this._addKey.apply(this, newArguments);
 };
