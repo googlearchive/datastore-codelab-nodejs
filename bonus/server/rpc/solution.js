@@ -3,20 +3,19 @@
 var googleapis = require('googleapis');
 var authclient = new googleapis.OAuth2Client();
 var datastore;
-var compute;
+var compute = new googleapis.auth.Compute();
 var todoListName = process.argv[2] || 'default';
 var datasetId = 'gcd-codelab';
 
-googleapis.discover('datastore', 'v1beta1')
-  .withAuthClient(compute)
-  .execute(function(err, client) {
-    console.log(err, client);
-    compute = new googleapis.auth.Compute()
-    compute.authorize(function(err, result) {
-      console.log(err, result);
+compute.authorize(function(err, result) {
+  console.assert(!err, err);
+  googleapis.discover('datastore', 'v1beta1')
+    .withAuthClient(compute)
+    .execute(function(err, client) {
+      console.log(err, client);
       datastore = client.datastore.datasets;
     });
-  });
+});
 
 // Define actions which can be called from the client using
 // ss.rpc('demo.ACTIONNAME', param1, param2...)

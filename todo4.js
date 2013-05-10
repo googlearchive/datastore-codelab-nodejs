@@ -8,17 +8,18 @@ var googleapis = require('googleapis'),
     todoListName = null;
 
 var usage = 'usage todo.js <todolist> <add|get|del|edit|ls|archive> [todo-title|todo-id]';
-googleapis.discover('datastore', 'v1beta1')
-  .withAuthClient(compute)
-  .execute(function(err, client) {
-    compute.authorize(function(err, result) {
+compute.authorize(function(err, result) {
+  console.assert(!err, err);
+  googleapis.discover('datastore', 'v1beta1')
+    .withAuthClient(compute)
+    .execute(function(err, client) {
       datastore = client.datastore.datasets;
       todoListName = process.argv[2];
       var cmd = process.argv[3];
       console.assert(todoListName && cmd && commands[cmd], usage);
       commands[cmd].apply(commands, process.argv.slice(4))
     });
-  });
+});
 
 // Don't edit me. This is a local variable definition solely for
 // preventing syntax errors.
