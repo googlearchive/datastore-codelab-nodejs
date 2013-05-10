@@ -8,15 +8,17 @@ var googleapis = require('googleapis'),
     todoListName = null;
 
 var usage = 'usage todo.js <todolist> <add|get> [todo-title|todo-id]';
-googleapis.discover('datastore', 'v1beta1').execute(function(err, client) {
-  compute.authorize(function(err, result) {
-    datastore = client.datastore.datasets;
-    todoListName = process.argv[2];
-    var cmd = process.argv[3];
-    console.assert(todoListName && cmd && commands[cmd], usage);
-    commands[cmd].apply(commands, process.argv.slice(4))
+googleapis.discover('datastore', 'v1beta1')
+  .withAuthClient(compute)
+  .execute(function(err, client) {
+    compute.authorize(function(err, result) {
+      datastore = client.datastore.datasets;
+      todoListName = process.argv[2];
+      var cmd = process.argv[3];
+      console.assert(todoListName && cmd && commands[cmd], usage);
+      commands[cmd].apply(commands, process.argv.slice(4))
+    });
   });
-});
 
 var commands = {
   add: function(title) {
@@ -34,7 +36,7 @@ var commands = {
           }
         }]
       }
-    }).withAuthClient(compute).execute(function(err, result) {
+    }).execute(function(err, result) {
       console.assert(!err, err);
       var key = result.mutationResult.insertAutoIdKeys[0];
       console.log('%d: TODO %s', key.path[1].id, title);
@@ -47,7 +49,7 @@ var commands = {
         path: [{ kind: 'TodoList', name: todoListName},
                { kind: 'Todo', id: id }]
       }]
-    }).withAuthClient(compute).execute(function(err, result) {
+    }).execute(function(err, result) {
       console.assert(!err, err);
       console.assert(!result.missing, 'todo %d: not found', id);
       var entity = result.found[0].entity;

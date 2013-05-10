@@ -8,15 +8,17 @@ var googleapis = require('googleapis'),
     todoListName = null;
 
 var usage = 'usage todo.js <todolist> <add|get|del|edit|ls|archive> [todo-title|todo-id]';
-googleapis.discover('datastore', 'v1beta1').execute(function(err, client) {
-  compute.authorize(function(err, result) {
-    datastore = client.datastore.datasets;
-    todoListName = process.argv[2];
-    var cmd = process.argv[3];
-    console.assert(todoListName && cmd && commands[cmd], usage);
-    commands[cmd].apply(commands, process.argv.slice(4))
+googleapis.discover('datastore', 'v1beta1')
+  .withAuthClient(compute)
+  .execute(function(err, client) {
+    compute.authorize(function(err, result) {
+      datastore = client.datastore.datasets;
+      todoListName = process.argv[2];
+      var cmd = process.argv[3];
+      console.assert(todoListName && cmd && commands[cmd], usage);
+      commands[cmd].apply(commands, process.argv.slice(4))
+    });
   });
-});
 
 var commands = {
   add: function(title) {
@@ -32,12 +34,11 @@ var commands = {
     datastore.blindWrite({
       datasetId: datasetId,
       mutation: mutation
-    }).withAuthClient(compute).execute(
-      function(err, result) {
-        console.assert(!err, err);
-        var key = result.mutationResult.insertAutoIdKeys[0];
-        console.log('%d: TODO %s', key.path[1].id, title);
-      });
+    }).execute(function(err, result) {
+      console.assert(!err, err);
+      var key = result.mutationResult.insertAutoIdKeys[0];
+      console.log('%d: TODO %s', key.path[1].id, title);
+    });
   },
   get: function(id, callback) {
     // level 4
@@ -48,7 +49,7 @@ var commands = {
     datastore.lookup({
       datasetId: datasetId,
       keys: [key]
-    }).withAuthClient(compute).execute(function(err, result) {
+    }).execute(function(err, result) {
       console.assert(!err, err);
       console.assert(!result.missing, 'todo %d: not found', id);
       var entity = result.found[0].entity;
@@ -71,7 +72,7 @@ var commands = {
     datastore.blindWrite({
       datasetId: datasetId,
       mutation: mutation
-    }).withAuthClient(compute).execute(function(err, result) {
+    }).execute(function(err, result) {
       console.assert(!err, err);
       console.log('%d: DEL', id);
     });
@@ -90,7 +91,7 @@ var commands = {
     datastore.blindWrite({
       datasetId: datasetId,
       mutation: mutation
-    }).withAuthClient(compute).execute(function(err, result) {
+    }).execute(function(err, result) {
       console.assert(!err, err);
       console.log('%d: %s %s', id, completed && 'DONE' || 'TODO', title);
     });
@@ -112,7 +113,7 @@ var commands = {
           }
         }
       }
-    }).withAuthClient(compute).execute(function(err, result) {
+    }).execute(function(err, result) {
       var entityResults = result.batch.entityResults || [];
       entityResults.forEach(function(entityResult) {
         var entity = entityResult.entity;
@@ -128,7 +129,7 @@ var commands = {
   archive: function() {
     datastore.beginTransaction({
       datasetId: datasetId
-    }).withAuthClient(compute).execute(function(err, result) {
+    }).execute(function(err, result) {
       var tx = result.transaction;
       datastore.runQuery({
         datasetId: datasetId,
@@ -156,7 +157,7 @@ var commands = {
             }
           }
         }
-      }).withAuthClient(compute).execute(function(err, result) {
+      }).execute(function(err, result) {
         var keys = [];
         var entityResults = result.batch.entityResults || [];
         entityResults.forEach(function(entityResult) {
@@ -166,7 +167,7 @@ var commands = {
           datasetId: datasetId,
           transaction: tx,
           mutation: { delete: keys }
-        }).withAuthClient(compute).execute(function(err, result) {
+        }).execute(function(err, result) {
           console.assert(!err, err);
           keys.forEach(function(key) {
             console.log('%d: DEL', key.path[1].id);

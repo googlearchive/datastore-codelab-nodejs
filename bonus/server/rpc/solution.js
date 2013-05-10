@@ -7,14 +7,16 @@ var compute;
 var todoListName = process.argv[2] || 'default';
 var datasetId = 'gcd-codelab';
 
-googleapis.discover('datastore', 'v1beta1').execute(function(err, client) {
-  console.log(err, client);
-  compute = new googleapis.auth.Compute()
-  compute.authorize(function(err, result) {
-    console.log(err, result);
-    datastore = client.datastore.datasets;
+googleapis.discover('datastore', 'v1beta1')
+  .withAuthClient(compute)
+  .execute(function(err, client) {
+    console.log(err, client);
+    compute = new googleapis.auth.Compute()
+    compute.authorize(function(err, result) {
+      console.log(err, result);
+      datastore = client.datastore.datasets;
+    });
   });
-});
 
 // Define actions which can be called from the client using
 // ss.rpc('demo.ACTIONNAME', param1, param2...)
@@ -37,7 +39,7 @@ exports.actions = function(req, res, ss) {
             }
           }
         }   
-      }).withAuthClient(compute).execute(function(err, result) {
+      }).execute(function(err, result) {
         var tt = {};
         var entityResults = result.batch.entityResults || [];
         entityResults.forEach(function(entityResult) {
@@ -64,7 +66,7 @@ exports.actions = function(req, res, ss) {
                    { kind: 'Todo', id: id }]
           }]
         }      
-      }).withAuthClient(compute).execute(function(err, result) {
+      }).execute(function(err, result) {
         console.log(err, result);
       });
     },
@@ -83,7 +85,7 @@ exports.actions = function(req, res, ss) {
             }
           }]
         }
-      }).withAuthClient(compute).execute(function(err, result) {
+      }).execute(function(err, result) {
         console.log(err, result);
         var id = result.mutationResult.insertAutoIdKeys[0].path[1].id;
         todo.id = id;
@@ -106,7 +108,7 @@ exports.actions = function(req, res, ss) {
             }
           }]
         }
-      }).withAuthClient(compute).execute(function(err, result) {
+      }).execute(function(err, result) {
         console.log(err, result);
       });
     },
@@ -138,7 +140,7 @@ exports.actions = function(req, res, ss) {
             }
           }
         }   
-      }).withAuthClient(compute).execute(function(err, result) {
+      }).execute(function(err, result) {
         var keys = [];
         var entityResults = result.batch.entityResults || [];
         entityResults.forEach(function(entityResult) {
@@ -151,7 +153,7 @@ exports.actions = function(req, res, ss) {
           mutation: {
             delete: keys
           }      
-        }).withAuthClient(compute).execute(function(err, result) {
+        }).execute(function(err, result) {
           console.log(err, result);
         });
       });

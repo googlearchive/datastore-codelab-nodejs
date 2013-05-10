@@ -7,14 +7,16 @@ var compute;
 var todoListName = process.argv[2] || 'default';
 var datasetId = 'gcd-codelab';
 
-googleapis.discover('datastore', 'v1beta1').execute(function(err, client) {
-  console.log(err, client);
-  compute = new googleapis.auth.Compute()
-  compute.authorize(function(err, result) {
-    console.log(err, result);
-    datastore = client.datastore.datasets;
+googleapis.discover('datastore', 'v1beta1')
+  .withAuthClient(compute)
+  .execute(function(err, client) {
+    console.log(err, client);
+    compute = new googleapis.auth.Compute()
+    compute.authorize(function(err, result) {
+      console.log(err, result);
+      datastore = client.datastore.datasets;
+    });
   });
-});
 
 var __FIXME__ = null;
 // Define actions which can be called from the client using
@@ -33,7 +35,7 @@ exports.actions = function(req, res, ss) {
     create: function(todo) {
       datastore.blindWrite(
         __FIXME__; // copy commands.add implementatation and tweak a little
-      ).withAuthClient(compute).execute(function(err, result) {
+      ).execute(function(err, result) {
         console.log(err, result);
         var id = result.mutationResult.insertAutoIdKeys[0].path[1].id;
         todo.id = id;
