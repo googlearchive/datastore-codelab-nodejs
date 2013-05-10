@@ -1,6 +1,6 @@
 #! /usr/bin/env node
 
-var gcdHelper = require('./helper');
+var gcdHelper = require('./helper_solution');
 
 var googleapis = require('googleapis'),
     authclient = new googleapis.OAuth2Client(),
@@ -22,34 +22,38 @@ googleapis.discover('datastore', 'v1beta1', {
   });
 });
 
-// Don't edit me. This is a local variable definition solely for
-// preventing syntax errors.
-var __FIXME__ = null;
-
 var commands = {
   add: function(title) {
-    datastore.blindwrite({
-      datasetId: datasetId,
-      mutation: {
-        insertAutoId: [{
-	  // This is how to use the `Key` helper. Edit the helper.js
-	  // and complete the helper implementation.
-          key: new gcdHelper.Key('TodoList', todoListName, 'Todo'),
-          properties: {
-            title: { values: [{ stringValue: title }] },
-            completed: { values: [{ booleanValue: false }] }
-          }
-        }]
-      }
-    }).withAuthClient(compute).execute(function(err, result) {
-      console.assert(!err, err);
-      var key = result.mutationResult.insertAutoIdKeys[0];
-      console.log('%d: TODO %s', key.path[1].id, title);
-    });
+    var mutation = new gcdHelper.MutationBuilder()
+      .insertAutoId(
+        // Key is a constructor for building a key
+        new gcdHelper.Key('TodoList', todoListName, 'Todo'),
+        // properties follow
+        {title: {stringValue: title}}, // you can pass an object
+        {completed: [{booleanValue: false}]} // as well as an array of objects
+      ).build();
+
+    var payload = {datasetId: datasetId,
+                   mutation: mutation};
+
+    console.log('Now sending the following payload:');
+    console.log(JSON.stringify(payload, null, 2));
+
+    datastore.blindwrite(payload).withAuthClient(compute).execute(
+      function(err, result) {
+        console.assert(!err, err);
+        var key = result.mutationResult.insertAutoIdKeys[0];
+        console.log('%d: TODO %s', key.path[1].id, title);
+      });
   },
   get: function(id, callback) {
-    // Create the key from the given id with the `Key` helper.
-    var key = __FIXME__;
+    var key = new gcdHelper.Key(
+      'TodoList', todoListName,
+      'Todo', Number(id)); // id needs to cast to Number
+
+    console.log('Now getting with the following key:');
+    console.log(JSON.stringify(key, null, 2));
+
     datastore.lookup({
       datasetId: datasetId,
       keys: [key]
@@ -67,14 +71,17 @@ var commands = {
     });
   },
   del: function(id) {
+    var mutation = new gcdHelper.MutationBuilder()
+      .delete(
+        new gcdHelper.Key('TodoList', todoListName, 'Todo', Number(id))
+      ).build();
+
+    console.log('Now sending the following mutation object:');
+    console.log(JSON.stringify(mutation, null, 2));
+
     datastore.blindwrite({
       datasetId: datasetId,
-      mutation: {
-        delete: [{
-          path: [{ kind: 'TodoList', name: todoListName },
-                 { kind: 'Todo', id: id }]
-        }]
-      }
+      mutation: mutation
     }).withAuthClient(compute).execute(function(err, result) {
       console.assert(!err, err);
       console.log('%d: DEL', id);
@@ -82,26 +89,29 @@ var commands = {
   },
   edit: function(id, title, completed) {
     completed = completed === 'true';
+
+    var mutation = new gcdHelper.MutationBuilder()
+      .update(
+        new gcdHelper.Key('TodoList', todoListName, 'Todo', Number(id)),
+        {title: {stringValue: title}},
+        {completed: [{booleanValue: completed}]}
+      ).build();
+
+    var payload = {datasetId: datasetId,
+                   mutation: mutation};
+
+    console.log('Now sending the following payload:');
+    console.log(JSON.stringify(payload, null, 2));
+
     datastore.blindwrite({
       datasetId: datasetId,
-      mutation: {
-        update: [{
-          key: {
-            path: [{ kind: 'TodoList', name: todoListName },
-                   { kind: 'Todo', id: id } ]
-          },
-          properties: {
-            title: { values: [{ stringValue: title }] },
-            completed: { values: [{ booleanValue: completed }] }
-          }
-        }]
-      }
+      mutation: mutation
     }).withAuthClient(compute).execute(function(err, result) {
       console.assert(!err, err);
       console.log('%d: %s %s', id, completed && 'DONE' || 'TODO', title);
     });
   },
-  ls: function() {
+  ls: function () {
     datastore.runquery({
       datasetId: datasetId,
       query: {

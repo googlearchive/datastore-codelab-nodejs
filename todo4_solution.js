@@ -1,6 +1,6 @@
 #! /usr/bin/env node
 
-var gcdHelper = require('./helper');
+var gcdHelper = require('./helper_solution');
 
 var googleapis = require('googleapis'),
     authclient = new googleapis.OAuth2Client(),
@@ -22,18 +22,12 @@ googleapis.discover('datastore', 'v1beta1', {
   });
 });
 
-// Don't edit me. This is a local variable definition solely for
-// preventing syntax errors.
-var __FIXME__ = null;
-
 var commands = {
   add: function(title) {
     datastore.blindwrite({
       datasetId: datasetId,
       mutation: {
         insertAutoId: [{
-	  // This is how to use the `Key` helper. Edit the helper.js
-	  // and complete the helper implementation.
           key: new gcdHelper.Key('TodoList', todoListName, 'Todo'),
           properties: {
             title: { values: [{ stringValue: title }] },
@@ -48,8 +42,8 @@ var commands = {
     });
   },
   get: function(id, callback) {
-    // Create the key from the given id with the `Key` helper.
-    var key = __FIXME__;
+    // level 4
+    var key = new gcdHelper.Key('TodoList', todoListName, 'Todo', Number(id));
     datastore.lookup({
       datasetId: datasetId,
       keys: [key]
