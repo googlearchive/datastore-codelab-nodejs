@@ -30,6 +30,17 @@ exports.actions = function(req, res, ss) {
       ss.publish.all('removeTodo', id);
       datastore.__FIXME__(); // copy commands.del implementatation
     },
+    create: function(todo) {
+      datastore.blindWrite(
+        __FIXME__; // copy commands.add implementatation and tweak a little
+      ).withAuthClient(compute).execute(function(err, result) {
+        console.log(err, result);
+        var id = result.mutationResult.insertAutoIdKeys[0].path[1].id;
+        todo.id = id;
+        // need to publish here
+        ss.publish.all('updateTodo', todo);
+      });
+    },
     update: function(todo) {
       ss.publish.all('updateTodo', todo);
       datastore.__FIXME__(); // copy commands.edit implementatation

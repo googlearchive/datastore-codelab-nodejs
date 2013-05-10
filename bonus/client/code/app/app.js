@@ -2,24 +2,16 @@
 (function () {
   'use strict';
 
-  var Utils = {
-    // https://gist.github.com/1308368
-    uuid: function(a,b){for(b=a='';a++<36;b+=a*51&52?(a^15?8^Math.random()*(a^20?16:4):4).toString(16):'-');return b},
-    pluralize: function (count, word) {
-      return count === 1 ? word : word + 's';
-    }
-  };
-
   var App = {
     init: function () {
       var self = this;
       this.ENTER_KEY = 13;
 
       ss.rpc('todos.getAll', function (todos) {
-	self.todos = todos;
-	self.cacheElements();
-	self.bindEvents();
-	self.render();
+        self.todos = todos;
+        self.cacheElements();
+        self.bindEvents();
+        self.render();
       });
     },
 
@@ -70,7 +62,7 @@
 
     render: function (preventRpc) {
       var html = $.map(this.todos, function (el) {
-	return ss.tmpl.todo.render(el);
+        return ss.tmpl.todo.render(el);
       }).join('');
 
       this.$todoList.html(html);
@@ -86,9 +78,9 @@
       var activeTodoCount = this.activeTodoCount();
 
       var footer = {
-	activeTodoCount: activeTodoCount,
-	activeTodoWord: Utils.pluralize(activeTodoCount, 'item'),
-	completedTodos: todoCount - activeTodoCount
+        activeTodoCount: activeTodoCount,
+        activeTodoWord: Utils.pluralize(activeTodoCount, 'item'),
+        completedTodos: todoCount - activeTodoCount
       };
 
       this.$footer.toggle(!!todoCount);
@@ -100,7 +92,7 @@
       var isChecked = $(this).prop('checked');
 
       $.each(App.todos, function (i, val) {
-	val.completed = isChecked;
+        val.completed = isChecked;
         ss.rpc('todos.update', val);
       });
 
@@ -111,9 +103,9 @@
       var count = 0;
 
       $.each(this.todos, function (i, val) {
-	if (!val.completed) {
-	  count++;
-	}
+        if (!val.completed) {
+          count++;
+        }
       });
 
       return count;
@@ -123,9 +115,9 @@
       var todos = App.todos;
       var l = todos.length;
       while (l--) {
-	if (todos[l].completed) {
-	  todos.splice(l, 1);
-	}
+        if (todos[l].completed) {
+          todos.splice(l, 1);
+        }
       }
       ss.rpc('todos.archive');
       App.render();
@@ -143,26 +135,22 @@
       var val = $.trim($input.val());
 
       if (e.which !== App.ENTER_KEY || !val) {
-	return;
+        return;
       }
 
-      var id = Utils.uuid();
       var todo = {
-	id: id,
-	title: val,
-	completed: false
+        title: val,
+        completed: false
       };
-      App.todos[id] = todo;
-      ss.rpc('todos.update', todo);
+      ss.rpc('todos.create', todo);
 
       $input.val('');
 
-      App.render();
     },
 
     toggle: function () {
       App.getTodo(this, function (i, val) {
-	val.completed = !val.completed;
+        val.completed = !val.completed;
         ss.rpc('todos.update', val);
       });
 
@@ -175,21 +163,21 @@
 
     blurOnEnter: function (e) {
       if (e.keyCode === App.ENTER_KEY) {
-	e.target.blur();
+        e.target.blur();
       }
     },
 
     update: function () {
       var val = $.trim($(this).removeClass('editing').val());
       App.getTodo(this, function (id, todo) {
-	if (val) {
-	  todo.title = val;
+        if (val) {
+          todo.title = val;
           ss.rpc('todos.update', todo);
-	} else {
+        } else {
           ss.rpc('todos.remove', id);
-	  delete this.todos[id];
-	}
-	this.render();
+          delete this.todos[id];
+        }
+        this.render();
       });
     },
     
@@ -197,7 +185,7 @@
       App.getTodo(this, function (id, todo) {
         ss.rpc('todos.remove', id);
         delete this.todos[id];
-	this.render();
+        this.render();
       });
     }
   };

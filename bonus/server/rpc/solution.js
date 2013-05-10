@@ -41,7 +41,7 @@ exports.actions = function(req, res, ss) {
         var tt = {};
         var entityResults = result.batch.entityResults || [];
         entityResults.forEach(function(entityResult) {
-          var id = entityResult.entity.key.path[1].name;
+          var id = entityResult.entity.key.path[1].id;
           var title = entityResult.entity.properties.title.values[0].stringValue;
           var completed = entityResult.entity.properties.completed.values[0].booleanValue;
           tt[id] = {
@@ -54,17 +54,40 @@ exports.actions = function(req, res, ss) {
       });
     },
     remove: function(id) {
+      console.log('Remove called with: ' + id);
       ss.publish.all('removeTodo', id);
       datastore.blindWrite({
         datasetId: datasetId,
         mutation: {
           delete: [{
             path: [{ kind: 'TodoList', name: todoListName },
-                   { kind: 'Todo', name: id }]
+                   { kind: 'Todo', id: id }]
           }]
         }      
       }).withAuthClient(compute).execute(function(err, result) {
         console.log(err, result);
+      });
+    },
+    create: function(todo) {
+      datastore.blindWrite({
+        datasetId: datasetId,
+        mutation: {
+          insertAutoId: [{
+            key: {
+              path: [{ kind: 'TodoList', name: todoListName },
+                     { kind: 'Todo'}]
+            },
+            properties: {
+              title: { values: [{ stringValue: todo.title }] },
+              completed: { values: [{ booleanValue: todo.completed }] }
+            }
+          }]
+        }
+      }).withAuthClient(compute).execute(function(err, result) {
+        console.log(err, result);
+        var id = result.mutationResult.insertAutoIdKeys[0].path[1].id;
+        todo.id = id;
+        ss.publish.all('updateTodo', todo);
       });
     },
     update: function(todo) {
@@ -75,7 +98,7 @@ exports.actions = function(req, res, ss) {
           upsert: [{
             key: {
               path: [{ kind: 'TodoList', name: todoListName },
-                     { kind: 'Todo', name: todo.id }]
+                     { kind: 'Todo', id: todo.id }]
             },
             properties: {
               title: { values: [{ stringValue: todo.title }] },
@@ -120,7 +143,7 @@ exports.actions = function(req, res, ss) {
         var entityResults = result.batch.entityResults || [];
         entityResults.forEach(function(entityResult) {
           keys.push(entityResult.entity.key);
-          var id = entityResult.entity.key.path[1].name;
+          var id = entityResult.entity.key.path[1].id;
           ss.publish.all('removeTodo', id);
         });
         datastore.blindWrite({
