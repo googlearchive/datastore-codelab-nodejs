@@ -28,8 +28,8 @@ var commands = {
   add: function(title) {
     var mutation = new MutationBuilder()
       .insertAutoId(
-	// This is how to use the `Key` helper. Fill the FIXME part of
-	// the `Key` constructor at the bottom of this file.
+        // This is how to use the `Key` helper. Fill the FIXME part of
+        // the `Key` constructor at the bottom of this file.
         new Key('TodoList', todoListName, 'Todo'),
         // properties follow
         {title: {stringValue: title}}, // you can pass an object
