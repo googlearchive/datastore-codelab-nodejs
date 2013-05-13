@@ -23,18 +23,17 @@ compute.authorize(function(err, result) {
 
 var commands = {
   add: function(title) {
-    var mutation = new MutationBuilder()
-      .insertAutoId(
-        // Key is a constructor for building a key
-        new Key('TodoList', todoListName, 'Todo'),
-        // properties follow
-        {title: {stringValue: title}}, // you can pass an object
-        {completed: [{booleanValue: false}]} // as well as an array of objects
-      ).build();
-
     datastore.blindWrite({
       datasetId: datasetId,
-      mutation: mutation
+      mutation: {
+        insertAutoId: [{
+          key: new Key('TodoList', todoListName, 'Todo'),
+          properties: {
+            title: { values: [{ stringValue: title }] },
+            completed: { values: [{ booleanValue: false }] }
+          }
+        }]
+      }
     }).execute(function(err, result) {
       console.assert(!err, err);
       var key = result.mutationResult.insertAutoIdKeys[0];

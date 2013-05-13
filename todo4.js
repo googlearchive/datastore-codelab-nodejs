@@ -27,19 +27,19 @@ var __FIXME__ = null;
 
 var commands = {
   add: function(title) {
-    var mutation = new MutationBuilder()
-      .insertAutoId(
-        // This is how to use the `Key` helper. Fill the FIXME part of
-        // the `Key` constructor at the bottom of this file.
-        new Key('TodoList', todoListName, 'Todo'),
-        // properties follow
-        {title: {stringValue: title}}, // you can pass an object
-        {completed: [{booleanValue: false}]} // as well as an array of objects
-      ).build();
-
+    // This is how to use the `Key` helper. Fill the FIXME part of
+    // the `Key` constructor at the bottom of this file.
     datastore.blindWrite({
       datasetId: datasetId,
-      mutation: mutation
+      mutation: {
+        insertAutoId: [{
+	  key: new Key('TodoList', todoListName, 'Todo'),
+          properties: {
+            title: { values: [{ stringValue: title }] },
+            completed: { values: [{ booleanValue: false }] }
+          }
+        }]
+      }
     }).execute(function(err, result) {
       console.assert(!err, err);
       var key = result.mutationResult.insertAutoIdKeys[0];
