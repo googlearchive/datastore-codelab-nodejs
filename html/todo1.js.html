@@ -1,0 +1,170 @@
+<link rel="stylesheet" href="syntax.css" type="text/css" />
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84</pre></div></td><td class="code"><div class="highlight"><pre><span class="err">#</span><span class="o">!</span> <span class="err">/usr/bin/env node</span>
+
+<span class="kd">var</span> <span class="nx">googleapis</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;googleapis&#39;</span><span class="p">),</span>
+    <span class="nx">authclient</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">googleapis</span><span class="p">.</span><span class="nx">OAuth2Client</span><span class="p">(),</span>
+    <span class="nx">datasetId</span> <span class="o">=</span> <span class="s1">&#39;gcd-codelab&#39;</span><span class="p">,</span>
+    <span class="nx">compute</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">googleapis</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">Compute</span><span class="p">(),</span>
+    <span class="nx">datastore</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="nx">todoListName</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+
+<span class="kd">var</span> <span class="nx">usage</span> <span class="o">=</span> <span class="s1">&#39;usage todo.js &lt;todolist&gt; &lt;add|get|del&gt; [todo-title|todo-id]&#39;</span><span class="p">;</span>
+<span class="nx">compute</span><span class="p">.</span><span class="nx">authorize</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">assert</span><span class="p">(</span><span class="o">!</span><span class="nx">err</span><span class="p">,</span> <span class="nx">err</span><span class="p">);</span>
+  <span class="nx">googleapis</span><span class="p">.</span><span class="nx">discover</span><span class="p">(</span><span class="s1">&#39;datastore&#39;</span><span class="p">,</span> <span class="s1">&#39;v1beta1&#39;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">withAuthClient</span><span class="p">(</span><span class="nx">compute</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">execute</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">client</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">datastore</span> <span class="o">=</span> <span class="nx">client</span><span class="p">.</span><span class="nx">datastore</span><span class="p">.</span><span class="nx">datasets</span><span class="p">;</span>
+      <span class="nx">todoListName</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+      <span class="kd">var</span> <span class="nx">cmd</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">assert</span><span class="p">(</span><span class="nx">todoListName</span> <span class="o">&amp;&amp;</span> <span class="nx">cmd</span> <span class="o">&amp;&amp;</span> <span class="nx">commands</span><span class="p">[</span><span class="nx">cmd</span><span class="p">],</span> <span class="nx">usage</span><span class="p">);</span>
+      <span class="nx">commands</span><span class="p">[</span><span class="nx">cmd</span><span class="p">].</span><span class="nx">apply</span><span class="p">(</span><span class="nx">commands</span><span class="p">,</span> <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+    <span class="p">});</span>
+<span class="p">});</span>
+
+<span class="c1">// Don&#39;t edit me. This is a local variable definition solely for</span>
+<span class="c1">// preventing syntax errors.</span>
+<span class="kd">var</span> <span class="nx">__FIXME__</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+
+<span class="kd">var</span> <span class="nx">commands</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">add</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">title</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">datastore</span><span class="p">.</span><span class="nx">blindWrite</span><span class="p">({</span>
+      <span class="nx">datasetId</span><span class="o">:</span> <span class="nx">datasetId</span><span class="p">,</span>
+      <span class="nx">mutation</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">insertAutoId</span><span class="o">:</span> <span class="p">[{</span>
+          <span class="nx">key</span><span class="o">:</span> <span class="p">{</span>
+            <span class="nx">path</span><span class="o">:</span> <span class="p">[{</span> <span class="nx">kind</span><span class="o">:</span> <span class="s1">&#39;TodoList&#39;</span><span class="p">,</span> <span class="nx">name</span><span class="o">:</span> <span class="nx">todoListName</span> <span class="p">},</span>
+                   <span class="p">{</span> <span class="nx">kind</span><span class="o">:</span> <span class="s1">&#39;Todo&#39;</span> <span class="p">}]</span>
+          <span class="p">},</span>
+          <span class="nx">properties</span><span class="o">:</span> <span class="p">{</span>
+            <span class="nx">title</span><span class="o">:</span> <span class="p">{</span> <span class="nx">values</span><span class="o">:</span> <span class="p">[{</span> <span class="nx">stringValue</span><span class="o">:</span> <span class="nx">title</span> <span class="p">}]</span> <span class="p">},</span>
+            <span class="nx">completed</span><span class="o">:</span> <span class="p">{</span> <span class="nx">values</span><span class="o">:</span> <span class="p">[{</span> <span class="nx">booleanValue</span><span class="o">:</span> <span class="kc">false</span> <span class="p">}]</span> <span class="p">}</span>
+          <span class="p">}</span>
+        <span class="p">}]</span>
+      <span class="p">}</span>
+    <span class="p">}).</span><span class="nx">execute</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">assert</span><span class="p">(</span><span class="o">!</span><span class="nx">err</span><span class="p">,</span> <span class="nx">err</span><span class="p">);</span>
+      <span class="kd">var</span> <span class="nx">key</span> <span class="o">=</span> <span class="nx">result</span><span class="p">.</span><span class="nx">mutationResult</span><span class="p">.</span><span class="nx">insertAutoIdKeys</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;%d: TODO %s&#39;</span><span class="p">,</span> <span class="nx">key</span><span class="p">.</span><span class="nx">path</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="nx">id</span><span class="p">,</span> <span class="nx">title</span><span class="p">);</span>
+    <span class="p">});</span>
+  <span class="p">},</span>
+  <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">datastore</span><span class="p">.</span><span class="nx">lookup</span><span class="p">({</span>
+      <span class="nx">datasetId</span><span class="o">:</span> <span class="nx">datasetId</span><span class="p">,</span>
+      <span class="nx">keys</span><span class="o">:</span> <span class="p">[{</span>
+        <span class="nx">path</span><span class="o">:</span> <span class="p">[{</span> <span class="nx">kind</span><span class="o">:</span> <span class="s1">&#39;TodoList&#39;</span><span class="p">,</span> <span class="nx">name</span><span class="o">:</span> <span class="nx">todoListName</span><span class="p">},</span>
+               <span class="p">{</span> <span class="nx">kind</span><span class="o">:</span> <span class="s1">&#39;Todo&#39;</span><span class="p">,</span> <span class="nx">id</span><span class="o">:</span> <span class="nx">id</span> <span class="p">}]</span>
+      <span class="p">}]</span>
+    <span class="p">}).</span><span class="nx">execute</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">assert</span><span class="p">(</span><span class="o">!</span><span class="nx">err</span><span class="p">,</span> <span class="nx">err</span><span class="p">);</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">assert</span><span class="p">(</span><span class="o">!</span><span class="nx">result</span><span class="p">.</span><span class="nx">missing</span><span class="p">,</span> <span class="s1">&#39;todo %d: not found&#39;</span><span class="p">,</span> <span class="nx">id</span><span class="p">);</span>
+      <span class="kd">var</span> <span class="nx">entity</span> <span class="o">=</span> <span class="nx">result</span><span class="p">.</span><span class="nx">found</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">entity</span><span class="p">;</span>
+      <span class="kd">var</span> <span class="nx">title</span> <span class="o">=</span> <span class="nx">entity</span><span class="p">.</span><span class="nx">properties</span><span class="p">.</span><span class="nx">title</span><span class="p">.</span><span class="nx">values</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">stringValue</span><span class="p">;</span>
+      <span class="kd">var</span> <span class="nx">completed</span> <span class="o">=</span> <span class="nx">entity</span><span class="p">.</span><span class="nx">properties</span><span class="p">.</span><span class="nx">completed</span><span class="p">.</span><span class="nx">values</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">booleanValue</span> <span class="o">==</span> <span class="kc">true</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">callback</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">id</span><span class="p">,</span> <span class="nx">title</span><span class="p">,</span> <span class="nx">completed</span><span class="p">);</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;%d: %s %s&#39;</span><span class="p">,</span> <span class="nx">id</span><span class="p">,</span> <span class="nx">completed</span> <span class="o">&amp;&amp;</span> <span class="s1">&#39;DONE&#39;</span> <span class="o">||</span> <span class="s1">&#39;TODO&#39;</span><span class="p">,</span> <span class="nx">title</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+  <span class="p">},</span>
+  <span class="nx">del</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">datastore</span><span class="p">.</span><span class="nx">blindWrite</span><span class="p">({</span>
+      <span class="nx">datasetId</span><span class="o">:</span> <span class="nx">datasetId</span><span class="p">,</span>
+      <span class="nx">mutation</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">__FIXME__</span><span class="o">:</span> <span class="p">[{</span> <span class="c1">// fill mutation name.</span>
+          <span class="nx">path</span><span class="o">:</span> <span class="p">[{</span> <span class="nx">kind</span><span class="o">:</span> <span class="s1">&#39;TodoList&#39;</span><span class="p">,</span>  <span class="nx">name</span><span class="o">:</span> <span class="nx">todoListName</span> <span class="p">},</span>
+                 <span class="p">{</span> <span class="nx">kind</span><span class="o">:</span> <span class="s1">&#39;Todo&#39;</span><span class="p">,</span> <span class="nx">id</span><span class="o">:</span> <span class="nx">__FIXME__</span>  <span class="p">}]</span> <span class="c1">// fill entity key id.</span>
+        <span class="p">}]</span>
+      <span class="p">}</span>
+    <span class="p">}).</span><span class="nx">execute</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">assert</span><span class="p">(</span><span class="o">!</span><span class="nx">err</span><span class="p">,</span> <span class="nx">err</span><span class="p">);</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;%d: DEL&#39;</span><span class="p">,</span> <span class="nx">id</span><span class="p">);</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</td></tr></table>
