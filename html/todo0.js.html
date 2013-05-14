@@ -1,134 +1,149 @@
-<link rel="stylesheet" href="syntax.css" type="text/css" />
-<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
-32
-33
-34
-35
-36
-37
-38
-39
-40
-41
-42
-43
-44
-45
-46
-47
-48
-49
-50
-51
-52
-53
-54
-55
-56
-57
-58
-59
-60
-61
-62
-63
-64
-65
-66</pre></div></td><td class="code"><div class="highlight"><pre><span class="err">#</span><span class="o">!</span> <span class="err">/usr/bin/env node</span>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>todo0.js</title>
+  <style>
+    .hll { background-color: #49483e }
+.c { color: #75715e } /* Comment */
+.err { color: #960050; background-color: #1e0010 } /* Error */
+.k { color: #66d9ef } /* Keyword */
+.l { color: #ae81ff } /* Literal */
+.n { color: #f8f8f2 } /* Name */
+.o { color: #f92672 } /* Operator */
+.p { color: #f8f8f2 } /* Punctuation */
+.cm { color: #75715e } /* Comment.Multiline */
+.cp { color: #75715e } /* Comment.Preproc */
+.c1 { color: #75715e } /* Comment.Single */
+.cs { color: #75715e } /* Comment.Special */
+.ge { font-style: italic } /* Generic.Emph */
+.gs { font-weight: bold } /* Generic.Strong */
+.kc { color: #66d9ef } /* Keyword.Constant */
+.kd { color: #66d9ef } /* Keyword.Declaration */
+.kn { color: #f92672 } /* Keyword.Namespace */
+.kp { color: #66d9ef } /* Keyword.Pseudo */
+.kr { color: #66d9ef } /* Keyword.Reserved */
+.kt { color: #66d9ef } /* Keyword.Type */
+.ld { color: #e6db74 } /* Literal.Date */
+.m { color: #ae81ff } /* Literal.Number */
+.s { color: #e6db74 } /* Literal.String */
+.na { color: #a6e22e } /* Name.Attribute */
+.nb { color: #f8f8f2 } /* Name.Builtin */
+.nc { color: #a6e22e } /* Name.Class */
+.no { color: #66d9ef } /* Name.Constant */
+.nd { color: #a6e22e } /* Name.Decorator */
+.ni { color: #f8f8f2 } /* Name.Entity */
+.ne { color: #a6e22e } /* Name.Exception */
+.nf { color: #a6e22e } /* Name.Function */
+.nl { color: #f8f8f2 } /* Name.Label */
+.nn { color: #f8f8f2 } /* Name.Namespace */
+.nx { color: #a6e22e } /* Name.Other */
+.py { color: #f8f8f2 } /* Name.Property */
+.nt { color: #f92672 } /* Name.Tag */
+.nv { color: #f8f8f2 } /* Name.Variable */
+.ow { color: #f92672 } /* Operator.Word */
+.w { color: #f8f8f2 } /* Text.Whitespace */
+.mf { color: #ae81ff } /* Literal.Number.Float */
+.mh { color: #ae81ff } /* Literal.Number.Hex */
+.mi { color: #ae81ff } /* Literal.Number.Integer */
+.mo { color: #ae81ff } /* Literal.Number.Oct */
+.sb { color: #e6db74 } /* Literal.String.Backtick */
+.sc { color: #e6db74 } /* Literal.String.Char */
+.sd { color: #e6db74 } /* Literal.String.Doc */
+.s2 { color: #e6db74 } /* Literal.String.Double */
+.se { color: #ae81ff } /* Literal.String.Escape */
+.sh { color: #e6db74 } /* Literal.String.Heredoc */
+.si { color: #e6db74 } /* Literal.String.Interpol */
+.sx { color: #e6db74 } /* Literal.String.Other */
+.sr { color: #e6db74 } /* Literal.String.Regex */
+.s1 { color: #e6db74 } /* Literal.String.Single */
+.ss { color: #e6db74 } /* Literal.String.Symbol */
+.bp { color: #f8f8f2 } /* Name.Builtin.Pseudo */
+.vc { color: #f8f8f2 } /* Name.Variable.Class */
+.vg { color: #f8f8f2 } /* Name.Variable.Global */
+.vi { color: #f8f8f2 } /* Name.Variable.Instance */
+.il { color: #ae81ff } /* Literal.Number.Integer.Long */
+    body {
+    background-color: #202020;
+    font-size: 25px;
+    margin: 0;
+    padding: 0;
+    }
+    pre {
+    margin: 0;
+    padding: 0;
+    }
+    .code {
+    }
+  </style>
+</head>
+<body>
+  <div class="code"><div class="highlight"><pre><span class="c">#! /usr/bin/env node</span>
 
-<span class="kd">var</span> <span class="nx">googleapis</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;googleapis&#39;</span><span class="p">),</span>
-    <span class="nx">authclient</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">googleapis</span><span class="p">.</span><span class="nx">OAuth2Client</span><span class="p">(),</span>
-    <span class="nx">datasetId</span> <span class="o">=</span> <span class="s1">&#39;gcd-codelab&#39;</span><span class="p">,</span>
-    <span class="nx">compute</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">googleapis</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">Compute</span><span class="p">(),</span>
-    <span class="nx">datastore</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>
-    <span class="nx">todoListName</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+<span class="n">var</span> <span class="n">googleapis</span> <span class="o">=</span> <span class="n">require</span><span class="p">(</span><span class="s">&#39;googleapis&#39;</span><span class="p">),</span>
+    <span class="n">authclient</span> <span class="o">=</span> <span class="n">new</span> <span class="n">googleapis</span><span class="o">.</span><span class="n">OAuth2Client</span><span class="p">(),</span>
+    <span class="n">datasetId</span> <span class="o">=</span> <span class="s">&#39;gcd-codelab&#39;</span><span class="p">,</span>
+    <span class="n">compute</span> <span class="o">=</span> <span class="n">new</span> <span class="n">googleapis</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">Compute</span><span class="p">(),</span>
+    <span class="n">datastore</span> <span class="o">=</span> <span class="n">null</span><span class="p">,</span>
+    <span class="n">todoListName</span> <span class="o">=</span> <span class="n">null</span><span class="p">;</span>
 
-<span class="kd">var</span> <span class="nx">usage</span> <span class="o">=</span> <span class="s1">&#39;usage todo.js &lt;todolist&gt; &lt;add|get&gt; [todo-title|todo-id]&#39;</span><span class="p">;</span>
-<span class="nx">compute</span><span class="p">.</span><span class="nx">authorize</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">assert</span><span class="p">(</span><span class="o">!</span><span class="nx">err</span><span class="p">,</span> <span class="nx">err</span><span class="p">);</span>
-  <span class="nx">googleapis</span><span class="p">.</span><span class="nx">discover</span><span class="p">(</span><span class="s1">&#39;datastore&#39;</span><span class="p">,</span> <span class="s1">&#39;v1beta1&#39;</span><span class="p">)</span>
-    <span class="p">.</span><span class="nx">withAuthClient</span><span class="p">(</span><span class="nx">compute</span><span class="p">)</span>
-    <span class="p">.</span><span class="nx">execute</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">client</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">datastore</span> <span class="o">=</span> <span class="nx">client</span><span class="p">.</span><span class="nx">datastore</span><span class="p">.</span><span class="nx">datasets</span><span class="p">;</span>
-      <span class="nx">todoListName</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
-      <span class="kd">var</span> <span class="nx">cmd</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span>
-      <span class="nx">console</span><span class="p">.</span><span class="nx">assert</span><span class="p">(</span><span class="nx">todoListName</span> <span class="o">&amp;&amp;</span> <span class="nx">cmd</span> <span class="o">&amp;&amp;</span> <span class="nx">commands</span><span class="p">[</span><span class="nx">cmd</span><span class="p">],</span> <span class="nx">usage</span><span class="p">);</span>
-      <span class="nx">commands</span><span class="p">[</span><span class="nx">cmd</span><span class="p">].</span><span class="nx">apply</span><span class="p">(</span><span class="nx">commands</span><span class="p">,</span> <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">var</span> <span class="n">usage</span> <span class="o">=</span> <span class="s">&#39;usage todo.js &lt;todolist&gt; &lt;add|get&gt; [todo-title|todo-id]&#39;</span><span class="p">;</span>
+<span class="n">compute</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="n">function</span><span class="p">(</span><span class="n">err</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">console</span><span class="o">.</span><span class="k">assert</span><span class="p">(</span><span class="err">!</span><span class="n">err</span><span class="p">,</span> <span class="n">err</span><span class="p">);</span>
+  <span class="n">googleapis</span><span class="o">.</span><span class="n">discover</span><span class="p">(</span><span class="s">&#39;datastore&#39;</span><span class="p">,</span> <span class="s">&#39;v1beta1&#39;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">withAuthClient</span><span class="p">(</span><span class="n">compute</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">function</span><span class="p">(</span><span class="n">err</span><span class="p">,</span> <span class="n">client</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">datastore</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">datasets</span><span class="p">;</span>
+      <span class="n">todoListName</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+      <span class="n">var</span> <span class="n">cmd</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span>
+      <span class="n">console</span><span class="o">.</span><span class="k">assert</span><span class="p">(</span><span class="n">todoListName</span> <span class="o">&amp;&amp;</span> <span class="n">cmd</span> <span class="o">&amp;&amp;</span> <span class="n">commands</span><span class="p">[</span><span class="n">cmd</span><span class="p">],</span> <span class="n">usage</span><span class="p">);</span>
+      <span class="n">commands</span><span class="p">[</span><span class="n">cmd</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">commands</span><span class="p">,</span> <span class="n">process</span><span class="o">.</span><span class="n">argv</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
     <span class="p">});</span>
 <span class="p">});</span>
 
-<span class="kd">var</span> <span class="nx">commands</span> <span class="o">=</span> <span class="p">{</span>
-  <span class="nx">add</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">title</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">datastore</span><span class="p">.</span><span class="nx">blindWrite</span><span class="p">({</span>
-      <span class="nx">datasetId</span><span class="o">:</span> <span class="nx">datasetId</span><span class="p">,</span>
-      <span class="nx">mutation</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">insertAutoId</span><span class="o">:</span> <span class="p">[{</span>
-          <span class="nx">key</span><span class="o">:</span> <span class="p">{</span>
-            <span class="nx">path</span><span class="o">:</span> <span class="p">[{</span> <span class="nx">kind</span><span class="o">:</span> <span class="s1">&#39;TodoList&#39;</span><span class="p">,</span> <span class="nx">name</span><span class="o">:</span> <span class="nx">todoListName</span> <span class="p">},</span>
-                   <span class="p">{</span> <span class="nx">kind</span><span class="o">:</span> <span class="s1">&#39;Todo&#39;</span> <span class="p">}]</span>
+<span class="n">var</span> <span class="n">commands</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="n">add</span><span class="p">:</span> <span class="n">function</span><span class="p">(</span><span class="n">title</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">datastore</span><span class="o">.</span><span class="n">blindWrite</span><span class="p">({</span>
+      <span class="n">datasetId</span><span class="p">:</span> <span class="n">datasetId</span><span class="p">,</span>
+      <span class="n">mutation</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">insertAutoId</span><span class="p">:</span> <span class="p">[{</span>
+          <span class="n">key</span><span class="p">:</span> <span class="p">{</span>
+            <span class="n">path</span><span class="p">:</span> <span class="p">[{</span> <span class="n">kind</span><span class="p">:</span> <span class="s">&#39;TodoList&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="n">todoListName</span> <span class="p">},</span>
+                   <span class="p">{</span> <span class="n">kind</span><span class="p">:</span> <span class="s">&#39;Todo&#39;</span> <span class="p">}]</span>
           <span class="p">},</span>
-          <span class="nx">properties</span><span class="o">:</span> <span class="p">{</span>
-            <span class="nx">title</span><span class="o">:</span> <span class="p">{</span> <span class="nx">values</span><span class="o">:</span> <span class="p">[{</span> <span class="nx">stringValue</span><span class="o">:</span> <span class="nx">title</span> <span class="p">}]</span> <span class="p">},</span>
-            <span class="nx">completed</span><span class="o">:</span> <span class="p">{</span> <span class="nx">values</span><span class="o">:</span> <span class="p">[{</span> <span class="nx">booleanValue</span><span class="o">:</span> <span class="kc">false</span> <span class="p">}]</span> <span class="p">}</span>
+          <span class="n">properties</span><span class="p">:</span> <span class="p">{</span>
+            <span class="n">title</span><span class="p">:</span> <span class="p">{</span> <span class="n">values</span><span class="p">:</span> <span class="p">[{</span> <span class="n">stringValue</span><span class="p">:</span> <span class="n">title</span> <span class="p">}]</span> <span class="p">},</span>
+            <span class="n">completed</span><span class="p">:</span> <span class="p">{</span> <span class="n">values</span><span class="p">:</span> <span class="p">[{</span> <span class="n">booleanValue</span><span class="p">:</span> <span class="n">false</span> <span class="p">}]</span> <span class="p">}</span>
           <span class="p">}</span>
         <span class="p">}]</span>
       <span class="p">}</span>
-    <span class="p">}).</span><span class="nx">execute</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">console</span><span class="p">.</span><span class="nx">assert</span><span class="p">(</span><span class="o">!</span><span class="nx">err</span><span class="p">,</span> <span class="nx">err</span><span class="p">);</span>
-      <span class="kd">var</span> <span class="nx">key</span> <span class="o">=</span> <span class="nx">result</span><span class="p">.</span><span class="nx">mutationResult</span><span class="p">.</span><span class="nx">insertAutoIdKeys</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
-      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;%d: TODO %s&#39;</span><span class="p">,</span> <span class="nx">key</span><span class="p">.</span><span class="nx">path</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="nx">id</span><span class="p">,</span> <span class="nx">title</span><span class="p">);</span>
+    <span class="p">})</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">function</span><span class="p">(</span><span class="n">err</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">console</span><span class="o">.</span><span class="k">assert</span><span class="p">(</span><span class="err">!</span><span class="n">err</span><span class="p">,</span> <span class="n">err</span><span class="p">);</span>
+      <span class="n">var</span> <span class="n">key</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">mutationResult</span><span class="o">.</span><span class="n">insertAutoIdKeys</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+      <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%d</span><span class="s">: TODO </span><span class="si">%s</span><span class="s">&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">.</span><span class="n">path</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">title</span><span class="p">);</span>
     <span class="p">});</span>    
   <span class="p">},</span>
-  <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">datastore</span><span class="p">.</span><span class="nx">lookup</span><span class="p">({</span>
-      <span class="nx">datasetId</span><span class="o">:</span> <span class="nx">datasetId</span><span class="p">,</span>
-      <span class="nx">keys</span><span class="o">:</span> <span class="p">[{</span>
-        <span class="nx">path</span><span class="o">:</span> <span class="p">[{</span> <span class="nx">kind</span><span class="o">:</span> <span class="s1">&#39;TodoList&#39;</span><span class="p">,</span> <span class="nx">name</span><span class="o">:</span> <span class="nx">todoListName</span><span class="p">},</span>
-               <span class="p">{</span> <span class="nx">kind</span><span class="o">:</span> <span class="s1">&#39;Todo&#39;</span><span class="p">,</span> <span class="nx">id</span><span class="o">:</span> <span class="nx">id</span> <span class="p">}]</span>
+  <span class="n">get</span><span class="p">:</span> <span class="n">function</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">callback</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">datastore</span><span class="o">.</span><span class="n">lookup</span><span class="p">({</span>
+      <span class="n">datasetId</span><span class="p">:</span> <span class="n">datasetId</span><span class="p">,</span>
+      <span class="n">keys</span><span class="p">:</span> <span class="p">[{</span>
+        <span class="n">path</span><span class="p">:</span> <span class="p">[{</span> <span class="n">kind</span><span class="p">:</span> <span class="s">&#39;TodoList&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="n">todoListName</span><span class="p">},</span>
+               <span class="p">{</span> <span class="n">kind</span><span class="p">:</span> <span class="s">&#39;Todo&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">id</span> <span class="p">}]</span>
       <span class="p">}]</span>
-    <span class="p">}).</span><span class="nx">execute</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">console</span><span class="p">.</span><span class="nx">assert</span><span class="p">(</span><span class="o">!</span><span class="nx">err</span><span class="p">,</span> <span class="nx">err</span><span class="p">);</span>
-      <span class="nx">console</span><span class="p">.</span><span class="nx">assert</span><span class="p">(</span><span class="o">!</span><span class="nx">result</span><span class="p">.</span><span class="nx">missing</span><span class="p">,</span> <span class="s1">&#39;todo %d: not found&#39;</span><span class="p">,</span> <span class="nx">id</span><span class="p">);</span>
-      <span class="kd">var</span> <span class="nx">entity</span> <span class="o">=</span> <span class="nx">result</span><span class="p">.</span><span class="nx">found</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">entity</span><span class="p">;</span>
-      <span class="kd">var</span> <span class="nx">title</span> <span class="o">=</span> <span class="nx">entity</span><span class="p">.</span><span class="nx">properties</span><span class="p">.</span><span class="nx">title</span><span class="p">.</span><span class="nx">values</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">stringValue</span><span class="p">;</span>
-      <span class="kd">var</span> <span class="nx">completed</span> <span class="o">=</span> <span class="nx">entity</span><span class="p">.</span><span class="nx">properties</span><span class="p">.</span><span class="nx">completed</span><span class="p">.</span><span class="nx">values</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">booleanValue</span> <span class="o">==</span> <span class="kc">true</span><span class="p">;</span>
-      <span class="k">if</span> <span class="p">(</span><span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">callback</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">id</span><span class="p">,</span> <span class="nx">title</span><span class="p">,</span> <span class="nx">completed</span><span class="p">);</span>
+    <span class="p">})</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">function</span><span class="p">(</span><span class="n">err</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">console</span><span class="o">.</span><span class="k">assert</span><span class="p">(</span><span class="err">!</span><span class="n">err</span><span class="p">,</span> <span class="n">err</span><span class="p">);</span>
+      <span class="n">console</span><span class="o">.</span><span class="k">assert</span><span class="p">(</span><span class="err">!</span><span class="n">result</span><span class="o">.</span><span class="n">missing</span><span class="p">,</span> <span class="s">&#39;todo </span><span class="si">%d</span><span class="s">: not found&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="p">);</span>
+      <span class="n">var</span> <span class="n">entity</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">found</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">entity</span><span class="p">;</span>
+      <span class="n">var</span> <span class="n">title</span> <span class="o">=</span> <span class="n">entity</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">title</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">stringValue</span><span class="p">;</span>
+      <span class="n">var</span> <span class="n">completed</span> <span class="o">=</span> <span class="n">entity</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">completed</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">booleanValue</span> <span class="o">==</span> <span class="n">true</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">callback</span><span class="p">(</span><span class="n">err</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">completed</span><span class="p">);</span>
       <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;%d: %s %s&#39;</span><span class="p">,</span> <span class="nx">id</span><span class="p">,</span> <span class="nx">completed</span> <span class="o">&amp;&amp;</span> <span class="s1">&#39;DONE&#39;</span> <span class="o">||</span> <span class="s1">&#39;TODO&#39;</span><span class="p">,</span> <span class="nx">title</span><span class="p">);</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%d</span><span class="s">: </span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="s">&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">completed</span> <span class="o">&amp;&amp;</span> <span class="s">&#39;DONE&#39;</span> <span class="o">||</span> <span class="s">&#39;TODO&#39;</span><span class="p">,</span> <span class="n">title</span><span class="p">);</span>
       <span class="p">}</span>
     <span class="p">});</span>
   <span class="p">}</span>
 <span class="p">};</span>
 </pre></div>
-</td></tr></table>
+</div>
+</body>
+</html>
