@@ -1,5 +1,6 @@
 var http = require('http');
 var ss = require('socketstream');
+var port = process.argv[3] || 5000;
 
 // Define a single-page client
 ss.client.define('main', {
@@ -28,7 +29,7 @@ if (ss.env === 'production') {
 
 // Start web server
 var server = http.Server(ss.http.middleware);
-server.listen(5000);
+server.listen(port);
 
 // Start SocketStream
 ss.start(server);
