@@ -56,7 +56,7 @@ var commands = {
     }).execute(function(err, result) {
       console.assert(!err, err);
       var key = result.mutationResult.insertAutoIdKeys[0];
-      console.log('%d: TODO %s', key.path[1].id, title);
+      console.log('ID %d: %s - TODO', key.path[1].id, title);
     });    
   },
   get: function(id, callback) {
@@ -80,7 +80,7 @@ var commands = {
       if (callback) {
         callback(err, id, title, completed);
       } else {
-        console.log('%d: %s %s', id, completed && 'DONE' || 'TODO', title);
+        console.log('ID %d: %s - %s', id, title, completed && 'DONE' || 'TODO');
       }
     });
   },
@@ -95,7 +95,7 @@ var commands = {
       }
     }).execute(function(err, result) {
       console.assert(!err, err);
-      console.log('%d: DEL', id);
+      console.log('ID %d: DEL', id);
     });
   },
   edit: function(id, title, completed) {
@@ -120,7 +120,7 @@ var commands = {
       }
     }).execute(function(err, result) {
       console.assert(!err, err);
-      console.log('%d: %s %s', id, completed && 'DONE' || 'TODO', title);
+      console.log('ID %d: %s - %s', id, title, completed && 'DONE' || 'TODO');
     });
   },
   ls: function () {
@@ -148,7 +148,7 @@ var commands = {
         var properties = entity.properties;
         var title = properties.__FIXME__.values[0].stringValue; // fill property name
         var completed = properties.__FIXME__.values[0].booleanValue == true; // fill property name
-        console.log('%d: %s %s', id, completed && 'DONE' || 'TODO', title);
+        console.log('ID %d: %s - %s', id, title, completed && 'DONE' || 'TODO');
       });
     });
   }
