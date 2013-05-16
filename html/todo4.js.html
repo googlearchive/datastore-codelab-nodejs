@@ -146,12 +146,14 @@
     <span class="p">});</span>
   <span class="p">},</span>
   <span class="k">del</span><span class="p">:</span> <span class="n">function</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span> <span class="p">{</span>
-    <span class="o">//</span> <span class="n">Create</span> <span class="n">a</span> <span class="s">&#39;delete&#39;</span> <span class="n">mutation</span> <span class="nb">object</span> <span class="k">with</span> <span class="n">a</span> <span class="n">key</span> <span class="k">with</span> <span class="n">the</span> <span class="n">given</span> <span class="nb">id</span>
-    <span class="n">var</span> <span class="n">mutation</span> <span class="o">=</span> <span class="n">__FIXME__</span><span class="p">;</span>
-
     <span class="n">datastore</span><span class="o">.</span><span class="n">blindWrite</span><span class="p">({</span>
       <span class="n">datasetId</span><span class="p">:</span> <span class="n">datasetId</span><span class="p">,</span>
-      <span class="n">mutation</span><span class="p">:</span> <span class="n">mutation</span>
+      <span class="n">mutation</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">delete</span><span class="p">:</span> <span class="p">[{</span>
+          <span class="n">path</span><span class="p">:</span> <span class="p">[{</span> <span class="n">kind</span><span class="p">:</span> <span class="s">&#39;TodoList&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="n">todoListName</span> <span class="p">},</span>
+                 <span class="p">{</span> <span class="n">kind</span><span class="p">:</span> <span class="s">&#39;Todo&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">id</span> <span class="p">}]</span>
+        <span class="p">}]</span>
+      <span class="p">}</span>   
     <span class="p">})</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">function</span><span class="p">(</span><span class="n">err</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span> <span class="p">{</span>
       <span class="n">console</span><span class="o">.</span><span class="k">assert</span><span class="p">(</span><span class="err">!</span><span class="n">err</span><span class="p">,</span> <span class="n">err</span><span class="p">);</span>
       <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%d</span><span class="s">: DEL&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="p">);</span>
@@ -159,14 +161,21 @@
   <span class="p">},</span>
   <span class="n">edit</span><span class="p">:</span> <span class="n">function</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">completed</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">completed</span> <span class="o">=</span> <span class="n">completed</span> <span class="o">===</span> <span class="s">&#39;true&#39;</span><span class="p">;</span>
-
-    <span class="o">//</span> <span class="n">Create</span> <span class="n">a</span> <span class="s">&#39;update&#39;</span> <span class="n">mutation</span> <span class="nb">object</span> <span class="k">with</span> <span class="n">a</span> <span class="n">key</span> <span class="k">with</span> <span class="n">the</span> <span class="n">given</span> <span class="nb">id</span> <span class="ow">and</span>
-    <span class="o">//</span> <span class="n">properties</span>
-    <span class="n">var</span> <span class="n">mutation</span> <span class="o">=</span> <span class="n">__FIXME__</span><span class="p">;</span>
-
+    <span class="n">completed</span> <span class="o">=</span> <span class="n">completed</span> <span class="o">===</span> <span class="s">&#39;true&#39;</span><span class="p">;</span>
     <span class="n">datastore</span><span class="o">.</span><span class="n">blindWrite</span><span class="p">({</span>
       <span class="n">datasetId</span><span class="p">:</span> <span class="n">datasetId</span><span class="p">,</span>
-      <span class="n">mutation</span><span class="p">:</span> <span class="n">mutation</span>
+      <span class="n">mutation</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">update</span><span class="p">:</span> <span class="p">[{</span>
+          <span class="n">key</span><span class="p">:</span> <span class="p">{</span>
+            <span class="n">path</span><span class="p">:</span> <span class="p">[{</span> <span class="n">kind</span><span class="p">:</span> <span class="s">&#39;TodoList&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="n">todoListName</span> <span class="p">},</span>
+                   <span class="p">{</span> <span class="n">kind</span><span class="p">:</span> <span class="s">&#39;Todo&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">id</span> <span class="p">}</span> <span class="p">]</span>
+          <span class="p">},</span>
+          <span class="n">properties</span><span class="p">:</span> <span class="p">{</span>
+            <span class="n">title</span><span class="p">:</span> <span class="p">{</span> <span class="n">values</span><span class="p">:</span> <span class="p">[{</span> <span class="n">stringValue</span><span class="p">:</span> <span class="n">title</span> <span class="p">}]</span> <span class="p">},</span>
+            <span class="n">completed</span><span class="p">:</span> <span class="p">{</span> <span class="n">values</span><span class="p">:</span> <span class="p">[{</span> <span class="n">booleanValue</span><span class="p">:</span> <span class="n">completed</span> <span class="p">}]</span> <span class="p">}</span>
+          <span class="p">}</span>
+        <span class="p">}]</span>
+      <span class="p">}</span>
     <span class="p">})</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">function</span><span class="p">(</span><span class="n">err</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span> <span class="p">{</span>
       <span class="n">console</span><span class="o">.</span><span class="k">assert</span><span class="p">(</span><span class="err">!</span><span class="n">err</span><span class="p">,</span> <span class="n">err</span><span class="p">);</span>
       <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%d</span><span class="s">: </span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="s">&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">completed</span> <span class="o">&amp;&amp;</span> <span class="s">&#39;DONE&#39;</span> <span class="o">||</span> <span class="s">&#39;TODO&#39;</span><span class="p">,</span> <span class="n">title</span><span class="p">);</span>
