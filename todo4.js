@@ -67,12 +67,14 @@ var commands = {
     });
   },
   del: function(id) {
-    // Create a 'delete' mutation object with a key with the given id
-    var mutation = __FIXME__;
-
     datastore.blindWrite({
       datasetId: datasetId,
-      mutation: mutation
+      mutation: {
+        delete: [{
+          path: [{ kind: 'TodoList', name: todoListName },
+                 { kind: 'Todo', id: id }]
+        }]
+      }   
     }).execute(function(err, result) {
       console.assert(!err, err);
       console.log('%d: DEL', id);
@@ -80,14 +82,21 @@ var commands = {
   },
   edit: function(id, title, completed) {
     completed = completed === 'true';
-
-    // Create a 'update' mutation object with a key with the given id and
-    // properties
-    var mutation = __FIXME__;
-
+    completed = completed === 'true';
     datastore.blindWrite({
       datasetId: datasetId,
-      mutation: mutation
+      mutation: {
+        update: [{
+          key: {
+            path: [{ kind: 'TodoList', name: todoListName },
+                   { kind: 'Todo', id: id } ]
+          },
+          properties: {
+            title: { values: [{ stringValue: title }] },
+            completed: { values: [{ booleanValue: completed }] }
+          }
+        }]
+      }
     }).execute(function(err, result) {
       console.assert(!err, err);
       console.log('%d: %s %s', id, completed && 'DONE' || 'TODO', title);
