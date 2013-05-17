@@ -35,7 +35,7 @@ echo ${OUTPUT_EDIT} | egrep "[0-9]+: babar - TODO"
 OUTPUT_GET=$("${TODO}" ${TODOLIST} get ${ID1})
 [[ "${OUTPUT_GET}" = "${OUTPUT_EDIT}" ]]
 OUTPUT_ARCHIVE=$("${TODO}" ${TODOLIST} archive)
-[[ "${OUTPUT_ARCHIVE}" = "${ID0}: ARCHIVED" ]]
+echo "${OUTPUT_ARCHIVE}" | grep -q "${ID0}"
 OUTPUT_LS=$("${TODO}" ${TODOLIST} ls)
 echo ${OUTPUT_LS} | egrep -v "[0-9]+: foo - TODO"
 echo ${OUTPUT_LS} | egrep -v "[0-9]+: bar - TODO"
