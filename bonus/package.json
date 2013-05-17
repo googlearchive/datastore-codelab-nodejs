@@ -14,6 +14,7 @@
         "dependencies": {
                 "socketstream": "0.3.x",
                 "ss-stylus": "0.1.x",
-                "ss-hogan": "0.1.x"
+                "ss-hogan": "0.1.x",
+		"request": "2.21.x"
         }
 }

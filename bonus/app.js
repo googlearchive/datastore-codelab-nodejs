@@ -1,6 +1,7 @@
 var http = require('http');
 var ss = require('socketstream');
-var port = process.getuid() + 5000;
+var port = process.getuid() + 50000;
+var request = require('request');
 
 // Define a single-page client
 ss.client.define('main', {
@@ -28,9 +29,13 @@ if (ss.env === 'production') {
 }
 
 // Start web server
-console.log('listening on port', port)
-var server = http.Server(ss.http.middleware);
-server.listen(port);
 
-// Start SocketStream
-ss.start(server);
+var externalIP = 'http://metadata/computeMetadata/v1beta1/instance/network-interfaces/0/access-configs/0/external-ip'
+request(externalIP, function(err, response, body) {
+    console.log('listening on:', 'http://'+body+':'+port)
+    var server = http.Server(ss.http.middleware);
+    server.listen(port);
+    
+    // Start SocketStream
+    ss.start(server);
+});
