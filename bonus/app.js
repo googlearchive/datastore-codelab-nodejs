@@ -1,6 +1,6 @@
 var http = require('http');
 var ss = require('socketstream');
-var port = process.getuid() + 5000;
+var port = process.getuid() + 50000;
 
 // Define a single-page client
 ss.client.define('main', {
