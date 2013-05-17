@@ -1,6 +1,6 @@
 var http = require('http');
 var ss = require('socketstream');
-var port = process.argv[3] || 5000;
+var port = process.getuid() + 5000;
 
 // Define a single-page client
 ss.client.define('main', {
@@ -28,6 +28,7 @@ if (ss.env === 'production') {
 }
 
 // Start web server
+console.log('listening on port', port)
 var server = http.Server(ss.http.middleware);
 server.listen(port);
 
