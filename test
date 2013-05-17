@@ -1,0 +1,12 @@
+#!/bin/bash
+set -e
+./test0
+! ./test1
+TODO="$(dirname $0)/todo1.js" ./test0
+! ./test2
+TODO="$(dirname $0)/todo2.js" ./test1
+! ./test3
+TODO="$(dirname $0)/todo3.js" ./test2
+! ./test4
+TODO="$(dirname $0)/todo.js" ./test3
+echo "ALL: PASS"

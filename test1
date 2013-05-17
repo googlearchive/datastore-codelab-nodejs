@@ -1,0 +1,20 @@
+#!/bin/bash
+set -e
+trap "echo FAILED" ERR
+TODO=${TODO:-$(dirname "$0")/todo1.js}
+TODOLIST=$(date | md5sum | cut -d ' ' -f 1)
+OUTPUT=$("${TODO}" ${TODOLIST} add foo)
+echo ${OUTPUT} | egrep "[0-9]+: foo - TODO"
+ID0=$(echo ${OUTPUT} | cut -d ':' -f 1 | sed -e 's/ID //')
+OUTPUT=$("${TODO}" ${TODOLIST} add bar)
+echo ${OUTPUT} | egrep "[0-9]+: bar - TODO"
+ID1=$(echo ${OUTPUT} | cut -d ':' -f 1 | sed -e 's/ID //')
+OUTPUT=$("${TODO}" ${TODOLIST} add hop)
+echo ${OUTPUT} | egrep "[0-9]+: hop - TODO"
+ID2=$(echo ${OUTPUT} | cut -d ':' -f 1 | sed -e 's/ID //')
+OUTPUT_GET=$("${TODO}" ${TODOLIST} get ${ID2})
+[[ "${OUTPUT_GET}" = "${OUTPUT}" ]]
+OUTPUT_DEL=$("${TODO}" ${TODOLIST} del ${ID2})
+[[ "${OUTPUT_DEL}" = "ID ${ID2}: DEL" ]]
+"${TODO}" ${TODOLIST} get ${ID2} && false
+echo "PASS"

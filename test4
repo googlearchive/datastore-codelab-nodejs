@@ -1,0 +1,1 @@
+TODO=${TODO:-$(dirname "$0")/todo4.js} ./test3

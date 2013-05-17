@@ -1,5 +1,7 @@
-set -ex
-TODO=${TODO:-$(dirname "$0")/todo.js}
+#!/bin/bash
+set -e
+trap "echo FAILED" ERR
+TODO=${TODO:-$(dirname "$0")/todo3.js}
 TODOLIST=$(date | md5sum | cut -d ' ' -f 1)
 OUTPUT=$("${TODO}" ${TODOLIST} add foo)
 echo ${OUTPUT} | egrep "[0-9]+: foo - TODO"
@@ -14,7 +16,7 @@ OUTPUT_GET=$("${TODO}" ${TODOLIST} get ${ID2})
 [[ "${OUTPUT_GET}" = "${OUTPUT}" ]]
 OUTPUT_DEL=$("${TODO}" ${TODOLIST} del ${ID2})
 [[ "${OUTPUT_DEL}" = "ID ${ID2}: DEL" ]]
-! ("${TODO}" ${TODOLIST} get ${ID2})
+"${TODO}" ${TODOLIST} get ${ID2} && false
 OUTPUT_LS=$("${TODO}" ${TODOLIST} ls)
 echo ${OUTPUT_LS} | egrep "[0-9]+: foo - TODO"
 echo ${OUTPUT_LS} | egrep "[0-9]+: bar - TODO"
