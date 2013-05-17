@@ -12,7 +12,7 @@ compute.authorize(function(err, result) {
   googleapis.discover('datastore', 'v1beta1')
     .withAuthClient(compute)
     .execute(function(err, client) {
-      console.log(err, client);
+      console.assert(!err, err);
       datastore = client.datastore.datasets;
     });
 });
@@ -55,7 +55,6 @@ exports.actions = function(req, res, ss) {
       });
     },
     remove: function(id) {
-      console.log('Remove called with: ' + id);
       ss.publish.all('removeTodo', id);
       datastore.blindWrite({
         datasetId: datasetId,
