@@ -176,7 +176,7 @@ var commands = {
         }).execute(function(err, result) {
           console.assert(!err, err);
           keys.forEach(function(key) {
-            console.log('%d: ARCHIVED', key.path[1].id);
+            console.log('ID: %d: ARCHIVED', key.path[1].id);
           });
         });
       });
