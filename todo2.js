@@ -21,10 +21,6 @@ compute.authorize(function(err, result) {
     });
 });
 
-// Don't edit me. This is a local variable definition solely for
-// preventing syntax errors.
-var __FIXME__ = null;
-
 var commands = {
   add: function(title) {
     datastore.blindWrite({
@@ -103,7 +99,7 @@ var commands = {
     datastore.blindWrite({
       datasetId: datasetId,
       mutation: {
-         // fill mutation name
+        // fill mutation name
         __FIXME__: [{
           key: {
             path: [{ kind: 'TodoList', name: todoListName },

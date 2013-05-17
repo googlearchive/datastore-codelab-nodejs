@@ -21,10 +21,6 @@ compute.authorize(function(err, result) {
     });
 });
 
-// Don't edit me. This is a local variable definition solely for
-// preventing syntax errors.
-var __FIXME__ = null;
-
 var commands = {
   add: function(title) {
     datastore.blindWrite({
