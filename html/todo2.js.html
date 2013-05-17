@@ -100,10 +100,6 @@
     <span class="p">});</span>
 <span class="p">});</span>
 
-<span class="o">//</span> <span class="n">Don</span><span class="s">&#39;t edit me. This is a local variable definition solely for</span>
-<span class="o">//</span> <span class="n">preventing</span> <span class="n">syntax</span> <span class="n">errors</span><span class="o">.</span>
-<span class="n">var</span> <span class="n">__FIXME__</span> <span class="o">=</span> <span class="n">null</span><span class="p">;</span>
-
 <span class="n">var</span> <span class="n">commands</span> <span class="o">=</span> <span class="p">{</span>
   <span class="n">add</span><span class="p">:</span> <span class="n">function</span><span class="p">(</span><span class="n">title</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">datastore</span><span class="o">.</span><span class="n">blindWrite</span><span class="p">({</span>
@@ -135,7 +131,7 @@
     <span class="p">})</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">function</span><span class="p">(</span><span class="n">err</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span> <span class="p">{</span>
       <span class="n">console</span><span class="o">.</span><span class="k">assert</span><span class="p">(</span><span class="err">!</span><span class="n">err</span><span class="p">,</span> <span class="n">err</span><span class="p">);</span>
       <span class="n">var</span> <span class="n">key</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">mutationResult</span><span class="o">.</span><span class="n">insertAutoIdKeys</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
-      <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%d</span><span class="s">: TODO </span><span class="si">%s</span><span class="s">&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">.</span><span class="n">path</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">title</span><span class="p">);</span>
+      <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s">&#39;ID </span><span class="si">%d</span><span class="s">: </span><span class="si">%s</span><span class="s"> - TODO&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">.</span><span class="n">path</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">title</span><span class="p">);</span>
     <span class="p">});</span>    
   <span class="p">},</span>
   <span class="n">get</span><span class="p">:</span> <span class="n">function</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">callback</span><span class="p">)</span> <span class="p">{</span>
@@ -159,7 +155,7 @@
       <span class="k">if</span> <span class="p">(</span><span class="n">callback</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">callback</span><span class="p">(</span><span class="n">err</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">completed</span><span class="p">);</span>
       <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%d</span><span class="s">: </span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="s">&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">completed</span> <span class="o">&amp;&amp;</span> <span class="s">&#39;DONE&#39;</span> <span class="o">||</span> <span class="s">&#39;TODO&#39;</span><span class="p">,</span> <span class="n">title</span><span class="p">);</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s">&#39;ID </span><span class="si">%d</span><span class="s">: </span><span class="si">%s</span><span class="s"> - </span><span class="si">%s</span><span class="s">&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">completed</span> <span class="o">&amp;&amp;</span> <span class="s">&#39;DONE&#39;</span> <span class="o">||</span> <span class="s">&#39;TODO&#39;</span><span class="p">);</span>
       <span class="p">}</span>
     <span class="p">});</span>
   <span class="p">},</span>
@@ -174,7 +170,7 @@
       <span class="p">}</span>
     <span class="p">})</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">function</span><span class="p">(</span><span class="n">err</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span> <span class="p">{</span>
       <span class="n">console</span><span class="o">.</span><span class="k">assert</span><span class="p">(</span><span class="err">!</span><span class="n">err</span><span class="p">,</span> <span class="n">err</span><span class="p">);</span>
-      <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%d</span><span class="s">: DEL&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="p">);</span>
+      <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s">&#39;ID </span><span class="si">%d</span><span class="s">: DEL&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="p">);</span>
     <span class="p">});</span>
   <span class="p">},</span>
   <span class="n">edit</span><span class="p">:</span> <span class="n">function</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">completed</span><span class="p">)</span> <span class="p">{</span>
@@ -182,7 +178,7 @@
     <span class="n">datastore</span><span class="o">.</span><span class="n">blindWrite</span><span class="p">({</span>
       <span class="n">datasetId</span><span class="p">:</span> <span class="n">datasetId</span><span class="p">,</span>
       <span class="n">mutation</span><span class="p">:</span> <span class="p">{</span>
-         <span class="o">//</span> <span class="n">fill</span> <span class="n">mutation</span> <span class="n">name</span>
+        <span class="o">//</span> <span class="n">fill</span> <span class="n">mutation</span> <span class="n">name</span>
         <span class="n">__FIXME__</span><span class="p">:</span> <span class="p">[{</span>
           <span class="n">key</span><span class="p">:</span> <span class="p">{</span>
             <span class="n">path</span><span class="p">:</span> <span class="p">[{</span> <span class="n">kind</span><span class="p">:</span> <span class="s">&#39;TodoList&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="n">todoListName</span> <span class="p">},</span>
@@ -199,7 +195,7 @@
       <span class="p">}</span>
     <span class="p">})</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">function</span><span class="p">(</span><span class="n">err</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span> <span class="p">{</span>
       <span class="n">console</span><span class="o">.</span><span class="k">assert</span><span class="p">(</span><span class="err">!</span><span class="n">err</span><span class="p">,</span> <span class="n">err</span><span class="p">);</span>
-      <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%d</span><span class="s">: </span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="s">&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">completed</span> <span class="o">&amp;&amp;</span> <span class="s">&#39;DONE&#39;</span> <span class="o">||</span> <span class="s">&#39;TODO&#39;</span><span class="p">,</span> <span class="n">title</span><span class="p">);</span>
+      <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s">&#39;ID </span><span class="si">%d</span><span class="s">: </span><span class="si">%s</span><span class="s"> - </span><span class="si">%s</span><span class="s">&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">completed</span> <span class="o">&amp;&amp;</span> <span class="s">&#39;DONE&#39;</span> <span class="o">||</span> <span class="s">&#39;TODO&#39;</span><span class="p">);</span>
     <span class="p">});</span>
   <span class="p">},</span>
   <span class="n">ls</span><span class="p">:</span> <span class="n">function</span> <span class="p">()</span> <span class="p">{</span>
@@ -227,7 +223,7 @@
         <span class="n">var</span> <span class="n">properties</span> <span class="o">=</span> <span class="n">entity</span><span class="o">.</span><span class="n">properties</span><span class="p">;</span>
         <span class="n">var</span> <span class="n">title</span> <span class="o">=</span> <span class="n">properties</span><span class="o">.</span><span class="n">__FIXME__</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">stringValue</span><span class="p">;</span> <span class="o">//</span> <span class="n">fill</span> <span class="nb">property</span> <span class="n">name</span>
         <span class="n">var</span> <span class="n">completed</span> <span class="o">=</span> <span class="n">properties</span><span class="o">.</span><span class="n">__FIXME__</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">booleanValue</span> <span class="o">==</span> <span class="n">true</span><span class="p">;</span> <span class="o">//</span> <span class="n">fill</span> <span class="nb">property</span> <span class="n">name</span>
-        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%d</span><span class="s">: </span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="s">&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">completed</span> <span class="o">&amp;&amp;</span> <span class="s">&#39;DONE&#39;</span> <span class="o">||</span> <span class="s">&#39;TODO&#39;</span><span class="p">,</span> <span class="n">title</span><span class="p">);</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s">&#39;ID </span><span class="si">%d</span><span class="s">: </span><span class="si">%s</span><span class="s"> - </span><span class="si">%s</span><span class="s">&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">completed</span> <span class="o">&amp;&amp;</span> <span class="s">&#39;DONE&#39;</span> <span class="o">||</span> <span class="s">&#39;TODO&#39;</span><span class="p">);</span>
       <span class="p">});</span>
     <span class="p">});</span>
   <span class="p">}</span>
